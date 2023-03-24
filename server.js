@@ -20,28 +20,31 @@ app.use(bodyParser.urlencoded({ limit: '10mb', extended: false }));
 
 //for live reload
 //=====================
-// {
-// 	const path = require("path");
-// 	const livereload = require("livereload");
-// 	const liveReloadServer = livereload.createServer();
-// 	liveReloadServer.watch(path.join(__dirname, 'public'));
+/* {
+	const path = require("path");
+	const livereload = require("livereload");
+	const liveReloadServer = livereload.createServer();
+	liveReloadServer.watch(path.join(__dirname, 'public'));
 
-// 	const connectLivereload = require("connect-livereload");
-// 	app.use(connectLivereload());
+	const connectLivereload = require("connect-livereload");
+	app.use(connectLivereload());
 
-// 	liveReloadServer.server.once("connection", () => {
-// 		setTimeout(() => {
-// 			liveReloadServer.refresh("/");
-// 		}, 100);
-// 	});
-// }
+	liveReloadServer.server.once("connection", () => {
+		setTimeout(() => {
+			liveReloadServer.refresh("/");
+		}, 100);
+	});
+} */
 //======================
 
 
 const mongoose = require('mongoose');
 mongoose.connect(process.env.DATABASE_URL)
 	.then(result => {
-		console.log("Mongoose Connected");
+		app.listen(port, (req, res) => {
+			console.log(`${require('./package.json').name} app is listening at http://localhost:${port}`);
+			console.log("Mongoose Connected");
+		});
 	}).catch(err => {
 		console.error(err);
 	});
@@ -59,6 +62,3 @@ db.once('open',() => {
 app.use('/', indexRouter);
 app.use('/all-authors', allAuthorsRouter);
 
-app.listen(port, (req, res) => {
-	console.log(`${require('./package.json').name} app is listening at http://localhost:${port}`);
-});
