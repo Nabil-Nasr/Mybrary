@@ -1,0 +1,16 @@
+<h2>Search Authors</h2>
+<%# now the method is get because we wants to search %>
+  <form action="/all-authors" method="GET">
+
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" autofocus
+      onfocus="this.setSelectionRange(this.value.length,this.value.length);" oninput="submit();focus()"
+      value="<%= searchQuery  %>">
+    <button type="submit">Search</button>
+  </form>
+  <br>
+  <% authors.forEach(author=> { %>
+    <div>
+      <%= author.name %>
+    </div>
+    <% }) %>
