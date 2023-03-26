@@ -1,0 +1,7 @@
+<h2>New Book</h2>
+<%# enctype tells the server that the server will post multi-platform data that can has a file %>
+<form action="/all-books" method="POST" enctype="multipart/form-data">
+  <%- include('_form_fields.ejs') %>
+  <a href="/all-books">Cancel</a>
+  <button type="submit" >Create</button>
+</form>

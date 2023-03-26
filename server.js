@@ -7,6 +7,7 @@ const expressLayouts = require('express-ejs-layouts');
 const port = process.env.PORT || 3000;
 const indexRouter = require('./routes/index');
 const allAuthorsRouter = require('./routes/all-authors');
+const allBooksRouter = require('./routes/all-books');
 const bodyParser = require('body-parser');
 
 app.set('view engine', 'ejs');
@@ -61,4 +62,6 @@ db.once('open',() => {
  */
 app.use('/', indexRouter);
 app.use('/all-authors', allAuthorsRouter);
+app.use('/all-books', allBooksRouter);
+
 

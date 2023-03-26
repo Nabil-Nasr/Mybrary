@@ -10,14 +10,14 @@ router.get('/', (req, res) => {
   if (req.query.name) {
     // making the search query a regular expression
     searchOptions.name = new RegExp(req.query.name, 'i');
-  }
+  } 
   // it searching (finding) by regular expression
   Author.find(searchOptions)
     .then(authors => {
       // when we rendering index.ejs we call it's layout
       res.render('all-authors/index', {
         authors: authors,
-        searchQuery: req.query.name
+        searchNameQuery: req.query.name
       });
     }).catch(err => {
       res.redirect('/');

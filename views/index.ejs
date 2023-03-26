@@ -1,0 +1,9 @@
+<h2>Recently added</h2>
+<% books.forEach(book=> { %>
+  <div>
+    <img width="100" height="150" src="<%= book.coverImagePath %>">
+    <div><%= book.publishDate.toISOString()%></div>
+    <div><%= book.createAt.toISOString()%></div>
+    <div><%= book.pageCount%></div>
+  </div>
+<% }) %>
