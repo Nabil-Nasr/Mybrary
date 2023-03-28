@@ -1,2 +1,3 @@
 ### Deployment demo :
-#### (wait until the page loads) ==> https://bit.ly/nabil-mybrary 
+#### (wait until the page loads) ==> https://mybrary-app.cyclic.app
+#### (another host) ==> https://mybrary-app-6090.onrender.com

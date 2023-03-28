@@ -7,8 +7,8 @@ const Book=require('../models/bookSchema')
 router.get('/',(req,res) => {
   // when we rendering index.ejs we call it's layout
   // sort query by creation
-  // with limit 2 books
-  Book.find().sort({createAt:'desc'}).limit(2)
+  // with limit 10 books
+  Book.find().sort({createAt:'desc'}).limit(10)
   .then(books=>{
     // sorting by creation time
     // res.render('index',{books:books.reverse()})

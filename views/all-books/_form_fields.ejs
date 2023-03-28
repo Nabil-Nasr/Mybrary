@@ -2,7 +2,7 @@
 <input type="text" required name="title" id="title" value="<%= book.title%>">
 
 <label for="author">Author</label>
-<select name="authorId" id="author">
+<select name="authorId" required id="author">
   <% authors.forEach(author=> { %>
     <% if (author.id==book.authorId) { %>
       <option selected value="<%= author.id %>" label="<%= author.name %>">

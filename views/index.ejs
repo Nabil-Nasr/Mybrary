@@ -1,9 +1,12 @@
 <h2>Recently added</h2>
 <% books.forEach(book=> { %>
   <div>
-    <img width="100" height="150" src="<%= book.coverImagePath %>">
-    <div><%= book.publishDate.toISOString()%></div>
-    <div><%= book.createAt.toISOString()%></div>
-    <div><%= book.pageCount%></div>
+    <img width="100" height="150" src="<%= `${book.coverImageURL}?tr=pr-true` %>"
+    srcset="
+    <%= `${book.coverImageURL}?tr=pr-true,w-400` %> 400w,
+    <%= `${book.coverImageURL}?tr=pr-true,w-800` %> 800w,
+    <%= `${book.coverImageURL}?tr=pr-true,w-1200` %> 1200w">
+    <div>Created at: <%= book.createAt.toISOString().split('T')[0]%></div>
+    <div>Published at: <%= book.publishDate.toISOString().split('T')[0]%></div>
   </div>
-<% }) %>
+<% }) ; %>
