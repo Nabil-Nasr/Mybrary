@@ -6,6 +6,9 @@
   <%# this for the hint that will be given to imagekit service %>
   <meta http-equiv="Accept-CH" content="DPR, Width">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <% if (locals.externalJSPath) { %>
+    <script defer src="<%= externalJSPath %>"></script>
+  <% } %>
   <title>Mybrary</title>
 </head>
 <body>

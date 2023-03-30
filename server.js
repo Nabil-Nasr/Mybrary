@@ -16,7 +16,7 @@ app.use(expressLayouts);
 app.use(express.static('public'));
 // for receiving post requests from front-end
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: false }));
-// another way
+// another way (the modern includes the middleware above)
 // app.use(express.urlencoded({ extended: true }));
 
 //for live reload

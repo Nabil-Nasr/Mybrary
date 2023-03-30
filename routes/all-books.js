@@ -19,8 +19,8 @@ const upload = multer({
     // accepting images types only
     // if the second parameter was true then the file will be uploaded
     if (!imageMimeTypes.includes(file.mimetype))
-      return callback(new Error('Wrong File Type'));
-    // add supporting of arabic characters
+      return callback(new Error('Wrong file type'));
+    // add supporting of arabic letters
     file.originalname = Buffer.from(file.originalname, 'latin1').toString('utf-8');
     callback(null, true);
   }
@@ -83,7 +83,8 @@ router.get('/new-book', (req, res) => {
       res.render('all-books/new-book', {
         book: new Book(),
         authors: authors,
-        errorMessage
+        errorMessage,
+        externalJSPath:"/js/new-book.js"
       });
     })
     .catch(err => {
