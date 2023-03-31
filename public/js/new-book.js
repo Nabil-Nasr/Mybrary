@@ -6,7 +6,7 @@ submitButton.addEventListener("click", (eve) => {
   const maxSize = 1024 ** 2 * 2;
   const imageMimeTypes = ['image/jpeg', 'image/bmp', 'image/webp', 'image/png', 'image/gif'];
   if (fileInput.files.length != 0) {
-    if (fileInput.files.length > 1) 
+    if (fileInput.files.length != 1) 
       createErrorMessage("Too many files", eve);
     else if (!imageMimeTypes.includes(fileInput.files[0].type)) 
       createErrorMessage("Wrong file type", eve);

@@ -1,6 +1,3 @@
-const dotenv = require('dotenv');
-dotenv.config();
-
 const express = require('express');
 const app = express();
 const expressLayouts = require('express-ejs-layouts');
@@ -8,16 +5,13 @@ const port = process.env.PORT || 3000;
 const indexRouter = require('./routes/index');
 const allAuthorsRouter = require('./routes/all-authors');
 const allBooksRouter = require('./routes/all-books');
-const bodyParser = require('body-parser');
 
 app.set('view engine', 'ejs');
 app.set('layout', 'layouts/layout');
 app.use(expressLayouts);
 app.use(express.static('public'));
 // for receiving post requests from front-end
-app.use(bodyParser.urlencoded({ limit: '10mb', extended: false }));
-// another way (the modern includes the middleware above)
-// app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ limit: '10mb', extended: false }));
 
 //for live reload
 //=====================
