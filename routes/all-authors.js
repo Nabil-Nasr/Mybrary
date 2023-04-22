@@ -82,7 +82,6 @@ router.get("/:id/edit",(req,res)=>{
   }).catch(err=>{
     res.redirect("/all-authors")
   })
-
 })
 
 // this page doing what happened in the edit page
@@ -96,7 +95,7 @@ router.put("/:id",async(req,res)=>{
   }catch{
     // first condition if the id not exists or there is no internet
     if(author==null)
-    res.redirect('/')
+      res.redirect('/')
     // second condition if there is a problem when saving the author
     else 
       res.render('all-authors/edit-author', {
@@ -124,12 +123,12 @@ router.put("/:id",async(req,res)=>{
 })
 
 router.delete("/:id", (req,res)=>{
-    Author.findByIdAndDelete(req.params.id)
-    .then(author=>{
-      res.redirect('/all-authors')
-    }).catch(err=>{
-      res.redirect(`/all-authors/${req.params.id}`)
-    })
+  Author.findByIdAndDelete(req.params.id)
+  .then(author=>{
+    res.redirect('/all-authors')
+  }).catch(err=>{
+    res.redirect(`/all-authors/${req.params.id}`)
+  })
 })
 
 module.exports = router;

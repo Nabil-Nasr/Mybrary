@@ -1,0 +1,17 @@
+<h2><%= book.title %></h2>
+<div>
+  <img width="100" height="150" src="<%= `${book.coverImageURL}?tr=n-book_cover` %>"
+  srcset="
+  <%= `${book.coverImageURL}?tr=n-book_cover,w-400` %> 400w,
+  <%= `${book.coverImageURL}?tr=n-book_cover,w-800` %> 800w,
+  <%= `${book.coverImageURL}?tr=n-book_cover,w-1200` %> 1200w">
+</div>
+<div>Author: <%= author.name %></div>
+<div>Publish Date: <%= book.publishDate.toISOString().split('T')[0]%></div>
+<div>Page Count: <%= book.pageCount%></div>
+<% if (book.description) { %>
+  <div>Description: <%= book.description%></div>
+<% } %>
+<a href="/all-books/<%= book.id %>/edit">Edit</a>
+<%- include('../partials/delete-form',{url:`/all-books/${book.id}`}) %>
+<a href="/all-authors/<%= author.id %>">View Author</a>

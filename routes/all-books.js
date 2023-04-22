@@ -17,8 +17,8 @@ const storage = multer.diskStorage({
     // for saving the user file name (not giving random name)
     // then add random number to avoid users overwriting files
     // then deleting the suffix when uploading to the image server
-    const fileNameSuffix=`${(Math.round(Math.random()*1e9)+"").slice(0,7)}${Date.now()}`
-    file.originalname = `${file.originalname}${fileNameSuffix}`
+    const fileNameSuffix = `${(Math.round(Math.random() * 1e9) + "").slice(0, 7)}${Date.now()}`;
+    file.originalname = `${file.originalname}${fileNameSuffix}`;
     callback(null, file.originalname);
   }
 });
@@ -80,7 +80,7 @@ router.get('/new-book', (req, res) => {
         errorMessage = "Create One Author at Least Before Creating a Book";
       res.render('all-books/new-book', {
         book: new Book(),
-        authors: authors,
+        authors,
         errorMessage,
         externalJSPath: "/js/new-book.js"
       });
@@ -116,55 +116,156 @@ router.post('/', (req, res) => {
     });
 
     book.save()
-      .then(result => {
-        res.redirect('/all-books');
+      .then(newBook => {
+        res.redirect(`/all-books/${newBook.id}`);
       }).catch(err => {
         Author.find()
           .then(authors => {
-            res.render('all-books/new-book', { book: book, authors, errorMessage: req.fileErrorMessage });
+            res.render('all-books/new-book', { book, authors, errorMessage: req.fileErrorMessage, externalJSPath: "/js/new-book.js" });
           }).catch(err => {
             res.redirect('/');
           });
-      })
+      });
   });
 });
 
-async function validateUpload (req) {
+router.get('/:id', (req, res) => {
+  // populate('authorId') will replace the authorId from it's document  with the author itself
+  Book.findById(req.params.id).populate('authorId')
+    .then(book => {
+      res.render('all-books/show-book', { book, author: book.authorId });
+    }).catch(err => {
+      res.redirect('/');
+    });
+});
+
+router.get('/:id/edit', (req, res) => {
+  Author.find()
+    .then(authors => {
+      Book.findById(req.params.id)
+        .then(book => {
+          res.render('all-books/edit-book', {
+            book,
+            authors,
+            externalJSPath: "/js/new-book.js"
+          });
+        });
+    })
+    .catch(err => {
+      res.redirect('/all-books');
+    });
+});
+
+router.put('/:id', (req, res) => {
+  upload.array('cover')(req, res, async err => {
+    let book;
+    try {
+      const {
+        title,
+        description,
+        publishDate,
+        pageCount,
+        authorId
+      } = req.body;
+      book = await Book.findById(req.params.id);
+      await validateUpload(req, book.coverImageFileId);
+      book.title = title;
+      book.description = description;
+      book.publishDate = new Date(publishDate);
+      book.pageCount = pageCount;
+      book.authorId = authorId;
+      // the information of the new image
+      book.coverImageName = req.imageFile.name;
+      book.coverImageFileId = req.imageFile.fileId;
+      book.coverImageURL = req.imageFile.url;
+      await book.save();
+      res.redirect(`/all-books/${book.id}`);
+    } catch (err) {
+      console.log(err);
+      if (book == null)
+        res.redirect('/');
+      else
+        Author.find()
+          .then(authors => {
+            res.render('all-books/edit-book', { book, authors, errorMessage: req.fileErrorMessage, externalJSPath: "/js/new-book.js" });
+          }).catch(err => {
+            res.redirect('/');
+          });
+    }
+  });
+});
+
+router.delete('/:id', (req, res) => {
+  Book.findByIdAndDelete(req.params.id)
+    .then(book => {
+      imageKit.deleteFile(book.coverImageFileId)
+        .then(response => {
+          res.redirect('/all-books');
+        }).catch(err => {
+          res.redirect('/');
+        });
+    }).catch(err => {
+      res.redirect(`/all-books/${req.params.id}`);
+    });
+});
+
+async function validateUpload (req, fileId = null) {
   const imageMimeTypes = ['image/jpeg', 'image/bmp', 'image/webp', 'image/png', 'image/gif'];
   const maxSize = 2 * 1024 ** 2;
   req.imageFile = {};
 
   if (req.files && req.files.length != 0) {
-    if (req.files.length != 1) {
+    if (req.files.length != 1)
       req.fileErrorMessage = "Too many files";
-    }
     else if (!imageMimeTypes.includes(req.files[0].mimetype))
       req.fileErrorMessage = "Wrong file type";
     else if (req.files[0].size > maxSize)
       req.fileErrorMessage = `File too large (Maximum => ${maxSize / 1024 ** 2}MB)`;
-    else {
-      // imagekit adds unique suffix to the filename
-      await imageKit.upload({
-        file: fs.readFileSync(req.files[0].path),
-                  // add supporting of arabic letters
-        fileName: Buffer.from(req.files[0].originalname, 'latin1').toString('utf-8').slice(0,-(7+`${Date.now()}`.length)),
-        folder: process.env.IMAGEKIT_UPLOAD_FOLDER,
-        useUniqueFileName: true
-      }).then(response => {
-        req.imageFile = response;
-      }).catch(err => {
-        req.fileErrorMessage = "An error occurred during image upload. Please try again.";
+    else
+      await imageUpload(req, fileId);
+
+    req.files.forEach(file => {
+      fs.unlink(file.path, err => {
+        console.log(file.originalname, err ? err : " deleted");
       });
-    }
-    
-    req.files.forEach(file=>{
-      fs.unlink(file.path,err=>{
-        console.log(file.originalname,err?err:" deleted")
-      })
-    })
+    });
   } else {
     req.fileErrorMessage = "Cover image required";
   }
 }
+
+
+async function imageUpload (req, fileId) {
+  // imagekit adds unique suffix to the filename
+  await imageKit.upload({
+    file: fs.readFileSync(req.files[0].path),
+    // add supporting of arabic letters
+    fileName: Buffer.from(req.files[0].originalname, 'latin1').toString('utf-8').slice(0, -(7 + `${Date.now()}`.length)),
+    folder: process.env.IMAGEKIT_UPLOAD_FOLDER,
+    useUniqueFileName: true
+  }).then(async newImageResponse => {
+    // when PUT request
+    if (fileId) {
+      // delete old image
+      await imageKit.deleteFile(fileId)
+        .then(deletedImageResponse => {
+          // when uploading and deleting is done
+          req.imageFile = newImageResponse;
+        }).catch(async err => {
+          // when uploading is done and deleting is not (delete the new image and try again to save image server disk size)
+          await imageKit.deleteFile(newImageResponse.fileId)
+            .catch(err => {
+              req.fileErrorMessage = "An error occurred during image upload. Please try again.";
+            });
+        });
+      // when POST request
+    } else {
+      req.imageFile = newImageResponse;
+    }
+  }).catch(err => {
+    req.fileErrorMessage = "An error occurred during image upload. Please try again.";
+  });
+}
+
 
 module.exports = router;
