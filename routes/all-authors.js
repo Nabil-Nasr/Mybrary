@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Author = require('../models/authorSchema');
+const Book = require('../models/bookSchema');
 
 // all authors
 router.get('/', (req, res) => {
@@ -49,14 +50,86 @@ router.post('/', (req, res) => {
   author.save()
     .then(newAuthor => {
       // newAuthor is same as author above
-      // res.redirect(`/all-authors/${newAuthor.id}`)
-      res.redirect(`/all-authors`);
+      res.redirect(`/all-authors/${newAuthor.id}`);
     }).catch(err => {
       res.render('all-authors/new-author', {
-        author: author,
+        author,
         errorMessage: "Error creating author"
       });
     });
 });
+
+router.get("/:id",(req,res)=>{
+    Author.findById(req.params.id)
+    .then(author=>{
+      Book.find({authorId:author.id}).limit(10)
+      .then(books=>{
+        res.render('all-authors/show-author',{author,books})
+      }).catch(err=>{
+        res.redirect('/')
+      })
+    }).catch(err=>{
+      res.redirect('/')
+    })
+})
+
+// this route shape is following rest principles
+// this page for editing the author
+router.get("/:id/edit",(req,res)=>{
+  Author.findById(req.params.id)
+  .then(author=>{
+    res.render('all-authors/edit-author', { author });
+  }).catch(err=>{
+    res.redirect("/all-authors")
+  })
+
+})
+
+// this page doing what happened in the edit page
+router.put("/:id",async(req,res)=>{
+  let author;
+  try{
+    author= await Author.findById(req.params.id)
+    author.name=req.body.name
+    await author.save()
+    res.redirect(`/all-authors/${author.id}`)
+  }catch{
+    // first condition if the id not exists or there is no internet
+    if(author==null)
+    res.redirect('/')
+    // second condition if there is a problem when saving the author
+    else 
+      res.render('all-authors/edit-author', {
+        author,
+        errorMessage: "Error updating author"
+      });
+  }
+  /* //another way
+  Author.findById(req.params.id)
+  .then(author=>{
+    author.name=req.body.name
+    author.save()
+    .then(author=>{
+      res.redirect(`/all-authors/${author.id}`)
+    }).catch(err=>{
+      res.render('all-authors/edit-author', {
+        author,
+        errorMessage: "Error updating author"
+      });
+    })
+  }).catch(err=>{
+    res.redirect('/')
+  }) 
+  */
+})
+
+router.delete("/:id", (req,res)=>{
+    Author.findByIdAndDelete(req.params.id)
+    .then(author=>{
+      res.redirect('/all-authors')
+    }).catch(err=>{
+      res.redirect(`/all-authors/${req.params.id}`)
+    })
+})
 
 module.exports = router;

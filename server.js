@@ -2,6 +2,9 @@ const express = require('express');
 const app = express();
 const expressLayouts = require('express-ejs-layouts');
 const port = process.env.PORT || 3000;
+const methodOverride= require('method-override')
+
+
 const indexRouter = require('./routes/index');
 const allAuthorsRouter = require('./routes/all-authors');
 const allBooksRouter = require('./routes/all-books');
@@ -9,6 +12,8 @@ const allBooksRouter = require('./routes/all-books');
 app.set('view engine', 'ejs');
 app.set('layout', 'layouts/layout');
 app.use(expressLayouts);
+// _method will be used in front-end post request
+app.use(methodOverride("_method"));
 app.use(express.static('public'));
 // for receiving post requests from front-end
 app.use(express.urlencoded({ limit: '10mb', extended: false }));
@@ -57,5 +62,3 @@ db.once('open',() => {
 app.use('/', indexRouter);
 app.use('/all-authors', allAuthorsRouter);
 app.use('/all-books', allBooksRouter);
-
-

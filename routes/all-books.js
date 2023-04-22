@@ -17,7 +17,8 @@ const storage = multer.diskStorage({
     // for saving the user file name (not giving random name)
     // then add random number to avoid users overwriting files
     // then deleting the suffix when uploading to the image server
-    file.originalname = `${file.originalname}${Math.round(Math.random()*1e9)}${Date.now()}`
+    const fileNameSuffix=`${(Math.round(Math.random()*1e9)+"").slice(0,7)}${Date.now()}`
+    file.originalname = `${file.originalname}${fileNameSuffix}`
     callback(null, file.originalname);
   }
 });
@@ -132,6 +133,7 @@ async function validateUpload (req) {
   const imageMimeTypes = ['image/jpeg', 'image/bmp', 'image/webp', 'image/png', 'image/gif'];
   const maxSize = 2 * 1024 ** 2;
   req.imageFile = {};
+
   if (req.files && req.files.length != 0) {
     if (req.files.length != 1) {
       req.fileErrorMessage = "Too many files";
@@ -144,8 +146,8 @@ async function validateUpload (req) {
       // imagekit adds unique suffix to the filename
       await imageKit.upload({
         file: fs.readFileSync(req.files[0].path),
-        // add supporting of arabic letters
-        fileName: Buffer.from(req.files[0].originalname, 'latin1').toString('utf-8').slice(0,-(9+(`${Date.now()}`).length)),
+                  // add supporting of arabic letters
+        fileName: Buffer.from(req.files[0].originalname, 'latin1').toString('utf-8').slice(0,-(7+`${Date.now()}`.length)),
         folder: process.env.IMAGEKIT_UPLOAD_FOLDER,
         useUniqueFileName: true
       }).then(response => {
@@ -154,9 +156,10 @@ async function validateUpload (req) {
         req.fileErrorMessage = "An error occurred during image upload. Please try again.";
       });
     }
+    
     req.files.forEach(file=>{
       fs.unlink(file.path,err=>{
-        console.log(file.originalname," deleted",err)
+        console.log(file.originalname,err?err:" deleted")
       })
     })
   } else {

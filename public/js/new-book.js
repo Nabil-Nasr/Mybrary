@@ -13,18 +13,18 @@ submitButton.addEventListener("click", (eve) => {
     else if (fileInput.files[0].size > maxSize) 
       createErrorMessage(`File too large (Maximum => ${maxSize / 1024 ** 2}MB)`, eve);
     else 
-      document.querySelector(`.error-message-1`).remove()
+      document.querySelector(`.client-error-message`).remove()
   }
 });
 
 function createErrorMessage (errorMessage, event) {
   event.preventDefault();
-  let errorElement = document.querySelector(`.error-message-1`);
+  let errorElement = document.querySelector(`.client-error-message`);
   if (errorElement)
       errorElement.innerText = errorMessage + " !!!";
   else {
     let div = document.createElement('div');
-    div.classList.add('error-message-1');
+    div.classList.add('client-error-message');
     div.innerText = errorMessage;
     document.querySelector(`header`).after(div);
   }
