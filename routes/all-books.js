@@ -82,7 +82,7 @@ router.get('/new-book', (req, res) => {
         book: new Book(),
         authors,
         errorMessage,
-        externalJSPath: "/js/new-book.js"
+        externalJSPath: "/js/book-input-form.js"
       });
     })
     .catch(err => {
@@ -121,7 +121,7 @@ router.post('/', (req, res) => {
       }).catch(err => {
         Author.find()
           .then(authors => {
-            res.render('all-books/new-book', { book, authors, errorMessage: req.fileErrorMessage, externalJSPath: "/js/new-book.js" });
+            res.render('all-books/new-book', { book, authors, errorMessage: req.fileErrorMessage, externalJSPath: "/js/book-input-form.js" });
           }).catch(err => {
             res.redirect('/');
           });
@@ -147,7 +147,7 @@ router.get('/:id/edit', (req, res) => {
           res.render('all-books/edit-book', {
             book,
             authors,
-            externalJSPath: "/js/new-book.js"
+            externalJSPath: "/js/book-input-form.js"
           });
         });
     })
@@ -187,7 +187,7 @@ router.put('/:id', (req, res) => {
       else
         Author.find()
           .then(authors => {
-            res.render('all-books/edit-book', { book, authors, errorMessage: req.fileErrorMessage, externalJSPath: "/js/new-book.js" });
+            res.render('all-books/edit-book', { book, authors, errorMessage: req.fileErrorMessage, externalJSPath: "/js/book-input-form.js" });
           }).catch(err => {
             res.redirect('/');
           });
