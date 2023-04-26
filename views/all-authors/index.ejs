@@ -6,13 +6,15 @@
   <input type="text" id="name" name="name" autofocus
     onfocus="this.setSelectionRange(this.value.length,this.value.length);" oninput="submit()"
     value="<%= searchNameQuery  %>">
-  <button type="submit">Search</button>
+  <button type="submit" class="btn btn-primary">Search</button>
 </form>
 <br>
 <% authors.forEach(author=> { %>
   <div><%= author.name %></div>
-  <a href="/all-authors/<%= author.id %>">View</a>
-  <a href="/all-authors/<%= author.id %>/edit">Edit</a>
-  <%# we should pass author.id only like this because it's string is a nodejs string (not ejs string) %>
-  <%- include('../partials/delete-form',{url:`/all-authors/${author.id}`}) %>
+  <div class="btn-row">
+    <a href="/all-authors/<%= author.id %>" class="btn btn-primary">View</a>
+    <a href="/all-authors/<%= author.id %>/edit" class="btn btn-primary">Edit</a>
+    <%# we should pass author.id only like this because it's string is a nodejs string (not ejs string) %>
+    <%- include('../partials/delete-form',{url:`/all-authors/${author.id}`}) %>
+  </div>
 <% }) %>

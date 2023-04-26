@@ -1,0 +1,211 @@
+:root {
+  --font-size-label:1.2rem;
+  --color-border-form-input:hsl(var(--color-base-hue),100%,50%);
+  --color-border-form-input-focus:hsl(var(--color-base-hue),100%,80%);
+  --color-background-form-input:hsl(var(--color-base-hue),100%,31%);
+  --color-background-select-option:hsl(var(--color-base-hue),100%,10%);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(200px,1fr));
+  gap: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-row > div {
+  display: grid;
+  margin-top: 0.5rem;
+  grid-template-rows: auto 1fr;
+}
+
+.form-row:nth-child(3) {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+@media (min-width:992px) {
+  .form-row:nth-child(3) .form-item-shrink {
+    flex-basis: 0;
+  }
+}
+
+
+.form-row:nth-child(3) > div {
+  flex-grow: 1;
+}
+
+.form-row label:not(label.file-input-wrapper) {
+  font-size: var(--font-size-label);
+  margin-left: 0.25rem;
+  margin-bottom: 0.25rem;
+  position: relative;
+}
+
+/* we used two :not() instead of one with two argument because of browsers supporting is poor*/
+.form-row label:not(label.file-input-wrapper):not(label[for="description"])::before {
+  content: "*";
+  position: absolute;
+  left: -0.6rem;
+  color: var(--color-text-error);
+}
+
+.form-row label.file-input-wrapper {
+  border-radius: 0.25rem;
+  border: 1px solid var(--color-border-form-input);
+  overflow: hidden;
+}
+
+.form-row label.file-input-wrapper:focus-within {
+  border: 1px solid var(--color-border-form-input-focus);
+}
+
+.form-row label.file-input-wrapper figure{
+  margin: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-row label.file-input-wrapper img {
+  width: 100%;
+  max-height: 30rem;
+  /* for alt text */
+  text-align: center;
+  animation: image-show 2s;
+  transition:opacity var(--transition-main-duration),filter var(--transition-main-duration);
+  /* this for long height images */
+  -o-object-fit: contain;
+  object-fit: contain;
+}
+
+@keyframes image-show {
+  from {
+    transform:rotateY(70deg);
+    filter: blur(2px);
+  }
+}
+
+.form-row label.file-input-wrapper img:hover {
+  opacity: 0.9;
+  filter: blur(1px);
+}
+
+.form-row label.file-input-wrapper figure figcaption {
+  margin: 0.2rem;
+  line-height: 1.3rem;
+  word-break: break-all;
+  display: grid;
+  text-align: center;
+}
+
+.form-row label.file-input-wrapper .chosen-file-error ,
+/* for alt text */
+.form-row label.file-input-wrapper img {
+  color:var(--color-text-error);
+  font-size: 1.2rem;
+}
+
+.form-row input {
+  width: 100%;
+}
+
+.form-row input,
+.form-row select,
+.form-row textarea {
+  height: 2rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  outline: none;
+  color: var(--color-main);
+  border: 1px solid var(--color-border-form-input);
+  background-color: var(--color-background-form-input);
+  font-size: 1rem;
+  font-weight:normal ;
+  font-family: inherit;
+}
+
+.form-row input:not(input[type="file"]):focus,
+.form-row select:focus,
+.form-row textarea:focus {
+  border: 1px solid var(--color-border-form-input-focus);
+}
+
+.form-row select option{
+  background-color: var(--color-background-select-option);
+}
+
+/* for firefox (not standard but simple)*/
+.form-row input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* for webkit browsers (not standard but simple) (same effect as above)*/
+.form-row input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.form-row input[type="file"] {
+  height: 100%;
+  padding: 1rem;
+  cursor: pointer;
+  white-space:normal;
+  word-wrap: break-word;
+  border: none;
+}
+
+/* applies only for not touch devices */
+@media (hover:hover){
+  /* applies if the there is no chosen file */
+  /* not working with firefox */
+  .form-row input[type="file"]:invalid:after {
+    content: "You can drag & drop files too.";
+    display: block;
+    margin-top: 0.25rem;
+    text-align:center;
+  }
+}
+
+/* this style for fallback when js not working for file input like when blocking js with add blocker */
+.form-row input[type="file"]::-webkit-file-upload-button,
+.form-row input[type="file"]::file-selector-button {
+  border:none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 1.2rem;
+  margin-block:-0.5rem 0.25rem;
+  margin-left:-0.5rem;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--color-btn-primary);
+  background-color: var(--color-background-btn-primary);
+  display: block;
+  transition: color var(--transition-main-duration),background-color var(--transition-main-duration);
+}
+
+.form-row input[type="file"]::-webkit-file-upload-button:hover {
+  color: var(--color-btn-primary-hover);
+  background-color: var(--color-background-btn-primary-hover);
+}
+
+.form-row input[type="file"]::file-selector-button:hover {
+  /* duplicated from the rule above for fallback issues */
+  color: var(--color-btn-primary-hover);
+  background-color: var(--color-background-btn-primary-hover);
+}
+
+.form-row textarea {
+  height: 100%;
+  resize: none;
+}
+
+.btn-row.form-btn-row{
+  justify-content: flex-end;
+  margin-block:1rem;
+}

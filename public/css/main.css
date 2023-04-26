@@ -1,0 +1,51 @@
+@import url('shared/variables.css');
+@import url('shared/fonts.css');
+@import url('shared/header.css');
+@import url('shared/buttons.css');
+
+:root {
+  font-family: 'Gotham Rounded','Courier New', Courier, monospace;
+  color: var(--color-main-light);
+}
+
+*,*::before,*::after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(to right ,var(--color-main-background-dark),var(--color-main-background-light) ) ;
+}
+
+.container ,
+.inner-container {
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+@media (min-width : 768px) {
+  :root {
+    font-size: 20px;
+  }
+  .container{
+      width: 750px;
+  }
+}
+
+@media (min-width:992px) {
+  .container{
+      width: 970px;
+  }
+}
+
+@media (min-width:1200px) {
+  .container{
+      width: 1170px;
+  }
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 500;
+}

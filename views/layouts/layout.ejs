@@ -9,11 +9,19 @@
   <% if (locals.externalJSPath) { %>
     <script defer src="<%= externalJSPath %>"></script>
   <% } %>
+  <link rel="stylesheet" href="/css/main.css">
+  <% if (locals.externalCSSPath) { %>
+    <link rel="stylesheet" href="<%= externalCSSPath %>">
+  <% } %>
   <title>Mybrary</title>
 </head>
 <body>
-  <%- include('../partials/header') %>
-  <%- include('../partials/error-message') %>
-  <%- body %>
+  <div class="container">
+    <%- include('../partials/header') %>
+    <div class="inner-container">
+      <%- include('../partials/error-message') %>
+      <%- body %>
+    </div>
+  </div>
 </body>
 </html>

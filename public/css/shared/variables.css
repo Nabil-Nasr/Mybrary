@@ -1,0 +1,11 @@
+:root {
+  --color-base-hue:200;
+  --color-base-hue-danger:calc(var(--color-base-hue) - 180);
+  --color-main-background-dark:hsl(var(--color-base-hue),100%,8%);
+  --color-main-background-light:hsl(var(--color-base-hue),100%,16%);
+  --color-main-light:hsl(var(--color-base-hue),100%,87%);
+  --color-text-error:hsl(var(--color-base-hue-danger),100%,83%);
+  --transition-main-duration:0.3s;
+}
+
+

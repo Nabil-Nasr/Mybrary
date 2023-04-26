@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema
 
+const minPageCount = 1
 
 const bookSchema = new Schema({
   title:{
@@ -14,6 +15,7 @@ const bookSchema = new Schema({
   },
   pageCount:{
     type:Number,
+    min:[minPageCount,`Minimum Page Count Should be (${minPageCount})`],
     required:true
   },
   createAt:{
@@ -42,6 +44,9 @@ const bookSchema = new Schema({
 // the author type above is referencing for an id in another object
 // and ref is what is object model that it refers to
 
+bookSchema.virtual('minPageCount').get(function(){
+  return minPageCount;
+})
 
 
 

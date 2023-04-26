@@ -1,0 +1,42 @@
+:root {
+  --font-size-logo:2.5rem;
+  --font-weight-logo:bold;
+  --font-weight-nav-link:300;
+}
+
+header .logo {
+  color: var(--color-main-light);
+  text-decoration: none;
+  font-size: var(--font-size-logo);
+  font-weight: var(--font-weight-logo);
+}
+
+header nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4rem;
+}
+
+header ul {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 0;
+}
+
+header li {
+  list-style: none;
+  padding: 0.5rem;
+}
+
+header a {
+  text-decoration: none;
+  color: var(--color-main-light);
+  font-weight: var(--font-weight-nav-link);
+}
+
+header a:hover {
+  color:white;
+}

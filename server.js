@@ -18,24 +18,6 @@ app.use(express.static('public'));
 // for receiving post requests from front-end
 app.use(express.urlencoded({ limit: '10mb', extended: false }));
 
-//for live reload
-//=====================
-/* {
-	const path = require("path");
-	const livereload = require("livereload");
-	const liveReloadServer = livereload.createServer();
-	liveReloadServer.watch(path.join(__dirname, 'public'));
-
-	const connectLivereload = require("connect-livereload");
-	app.use(connectLivereload());
-
-	liveReloadServer.server.once("connection", () => {
-		setTimeout(() => {
-			liveReloadServer.refresh("/");
-		}, 100);
-	});
-} */
-//======================
 
 
 const mongoose = require('mongoose');

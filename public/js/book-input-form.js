@@ -1,31 +1,98 @@
-let fileInput = document.querySelector(`input[type="file"]`);
-let submitButton = document.querySelector(`button[type="submit"]`);
+const fileInput = document.querySelector(`input[type="file"]`);
+const submitButton = document.querySelector(`button[type="submit"]`);
 
 // client-side image file validation beside server-side validation to save user bandwidth
+const imageMimeTypes = ['image/jpeg', 'image/bmp', 'image/webp', 'image/png', 'image/gif'];
+const maxSize = 1024 ** 2 * 2;
 submitButton.addEventListener("click", (eve) => {
-  const maxSize = 1024 ** 2 * 2;
-  const imageMimeTypes = ['image/jpeg', 'image/bmp', 'image/webp', 'image/png', 'image/gif'];
   if (fileInput.files.length != 0) {
-    if (fileInput.files.length != 1)
-      createErrorMessage("Too many files", eve);
-    else if (!imageMimeTypes.includes(fileInput.files[0].type))
-      createErrorMessage("Wrong file type", eve);
-    else if (fileInput.files[0].size > maxSize)
-      createErrorMessage(`File too large (Maximum => ${maxSize / 1024 ** 2}MB)`, eve);
-    else
+    if (fileInput.files.length != 1) 
+      createErrorMessage("Too many files ❌", eve);
+    else if (!imageMimeTypes.includes(fileInput.files[0].type)) 
+      createErrorMessage("Wrong file type ❌", eve);
+    else if (fileInput.files[0].size > maxSize) 
+      createErrorMessage(`File too large (Maximum ==> ${returnFileSize(maxSize)}) ❌`, eve);
+    else 
       document.querySelector(`.client-error-message`).remove()
   }
 });
 
 function createErrorMessage (errorMessage, event) {
   event.preventDefault();
-  let errorElement = document.querySelector(`.client-error-message`);
+  const errorElement = document.querySelector(`.client-error-message`);
   if (errorElement)
-      errorElement.innerText = errorMessage + " !!!";
+      errorElement.innerText = errorMessage.replace(/❌/i,'!!! ❌');
   else {
-    let div = document.createElement('div');
-    div.classList.add('client-error-message');
-    div.innerText = errorMessage;
-    document.querySelector(`header`).after(div);
+    const clientError = document.createElement('div');
+    clientError.classList.add('client-error-message');
+    clientError.innerText = errorMessage;
+    const errorParent = document.querySelector(`.error-message`)
+    if(errorParent) {
+      errorParent.appendChild(clientError)
+    } else {
+      const errorParent = document.createElement(`div`)
+      errorParent.classList.add('error-message')
+      errorParent.appendChild(clientError)
+      document.querySelector(`header`).after(errorParent);
+    }
   }
+}
+
+const fileInputWrapper=document.querySelector(`.file-input-wrapper`)
+fileInput.addEventListener("change",function(){
+  this.removeAttribute("style")
+  const previousImage = document.querySelector(`.file-input-wrapper figure img`)
+  URL.revokeObjectURL(previousImage?.src)
+  previousImage?.parentElement.remove()
+  if (imageMimeTypes.includes(this.files[0].type)) {
+    const figure = document.createElement(`figure`)
+
+    const img = document.createElement(`img`)
+    img.src = URL.createObjectURL(this.files[0])
+    // the line below is not wrong with search engines because it's temporary
+    img.alt = "Wrong image type ❌"
+    figure.appendChild(img)
+
+    const figureCaption = document.createElement(`figcaption`)
+
+    const span1 = document.createElement(`span`)
+    span1.innerText = `Image Name : ${this.files[0].name}`
+    figureCaption.appendChild(span1)
+
+    const span2 = document.createElement(`span`)
+    span2.innerText = `Image Size : ${returnFileSize(this.files[0].size)}`
+    if(this.files[0].size > maxSize) {
+      span2.classList.add('chosen-file-error')
+      span2.innerText+=` ❌ Maximum ==> ${returnFileSize(maxSize)}`
+    }
+    figureCaption.appendChild(span2)
+
+    if(this.files.length > 1) {
+      const span3 = document.createElement(`span`)
+      span3.classList.add('chosen-file-error')
+      span3.innerText = `Too Many Files ❌`
+      figureCaption.appendChild(span3)
+    }
+
+    figure.appendChild(figureCaption)
+    fileInputWrapper.appendChild(figure)
+
+    this.style.opacity=0
+    this.style.position= "absolute"
+    this.style.top= 0
+    this.style.left= 0
+    this.style.zIndex=-1
+  }
+})
+
+
+function returnFileSize(sizeInBits) {
+  if (sizeInBits < 1024) 
+    return `${sizeInBits} bytes`;
+  else if (sizeInBits >= 1024 && sizeInBits < 1048576) 
+    return `${(sizeInBits / 1024).toFixed(1)} KB`;
+  else if (sizeInBits >= 1048576 && sizeInBits < 1073741824) 
+    return `${(sizeInBits / 1048576).toFixed(1)} MB`;
+  else if (sizeInBits >= 1073741824)
+    return `${(sizeInBits / 1073741824).toFixed(1)} GB`;
 }

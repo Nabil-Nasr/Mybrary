@@ -1,3 +1,5 @@
 <% if(locals.errorMessage){ %>
-<div class="server-error-message"><%= errorMessage %></div>
+<div class="error-message">
+  <div class="server-error-message">Server Error : <%= errorMessage %> ❌</div>
+</div>
 <% } %>

@@ -82,7 +82,7 @@ router.get('/new-book', (req, res) => {
         book: new Book(),
         authors,
         errorMessage,
-        externalJSPath: "/js/book-input-form.js"
+        externalJSPath: "/js/book-input-form.js",externalCSSPath : "/css/book-input-form.css"
       });
     })
     .catch(err => {
@@ -95,7 +95,6 @@ router.post('/', (req, res) => {
   // uploading 1 file as array to validate the files number (avoiding manipulating in the file input)
   upload.array('cover')(req, res, async err => {
     // filtering and limiting the file by our method not by multer methods to avoid some multer crashes
-    await validateUpload(req);
     const {
       title,
       description,
@@ -103,6 +102,7 @@ router.post('/', (req, res) => {
       pageCount,
       authorId
     } = req.body;
+    await validateInputs(req)
     // createAt will be created automatically
     const book = new Book({
       title,
@@ -110,9 +110,9 @@ router.post('/', (req, res) => {
       publishDate: new Date(publishDate),
       pageCount,
       authorId,
-      coverImageName: req.imageFile.name,
-      coverImageFileId: req.imageFile.fileId,
-      coverImageURL: req.imageFile.url
+      coverImageName: req.imageFile?.name,
+      coverImageFileId: req.imageFile?.fileId,
+      coverImageURL: req.imageFile?.url
     });
 
     book.save()
@@ -121,7 +121,11 @@ router.post('/', (req, res) => {
       }).catch(err => {
         Author.find()
           .then(authors => {
-            res.render('all-books/new-book', { book, authors, errorMessage: req.fileErrorMessage, externalJSPath: "/js/book-input-form.js" });
+            res.render('all-books/new-book', { 
+              book, 
+              authors, 
+              errorMessage: req.fileErrorMessage, 
+              externalJSPath: "/js/book-input-form.js",externalCSSPath : "/css/book-input-form.css" });
           }).catch(err => {
             res.redirect('/');
           });
@@ -147,7 +151,7 @@ router.get('/:id/edit', (req, res) => {
           res.render('all-books/edit-book', {
             book,
             authors,
-            externalJSPath: "/js/book-input-form.js"
+            externalJSPath: "/js/book-input-form.js",externalCSSPath : "/css/book-input-form.css"
           });
         });
     })
@@ -168,26 +172,29 @@ router.put('/:id', (req, res) => {
         authorId
       } = req.body;
       book = await Book.findById(req.params.id);
-      await validateUpload(req, book.coverImageFileId);
+      await validateInputs(req,book.coverImageFileId)
       book.title = title;
       book.description = description;
       book.publishDate = new Date(publishDate);
       book.pageCount = pageCount;
       book.authorId = authorId;
       // the information of the new image
-      book.coverImageName = req.imageFile.name;
-      book.coverImageFileId = req.imageFile.fileId;
-      book.coverImageURL = req.imageFile.url;
+      book.coverImageName = req.imageFile?.name;
+      book.coverImageFileId = req.imageFile?.fileId;
+      book.coverImageURL = req.imageFile?.url;
       await book.save();
       res.redirect(`/all-books/${book.id}`);
     } catch (err) {
-      console.log(err);
       if (book == null)
         res.redirect('/');
       else
         Author.find()
           .then(authors => {
-            res.render('all-books/edit-book', { book, authors, errorMessage: req.fileErrorMessage, externalJSPath: "/js/book-input-form.js" });
+            res.render('all-books/edit-book', { 
+              book, 
+              authors, 
+              errorMessage: req.fileErrorMessage, 
+              externalJSPath: "/js/book-input-form.js",externalCSSPath : "/css/book-input-form.css" });
           }).catch(err => {
             res.redirect('/');
           });
@@ -209,10 +216,20 @@ router.delete('/:id', (req, res) => {
     });
 });
 
+async function validateInputs(req,fileId=null){
+  const minPageCount = new Book().minPageCount
+  req.imageFile = {};
+  if(req.body.pageCount != '' && req.body.pageCount < minPageCount) {
+    req.fileErrorMessage = `Minimum Page Count Should be (${minPageCount}) but (${req.body.pageCount}) Provided.`
+    console.log(req.fileErrorMessage);
+  } else {
+    await validateUpload(req,fileId);
+  }
+}
+
 async function validateUpload (req, fileId = null) {
   const imageMimeTypes = ['image/jpeg', 'image/bmp', 'image/webp', 'image/png', 'image/gif'];
   const maxSize = 2 * 1024 ** 2;
-  req.imageFile = {};
 
   if (req.files && req.files.length != 0) {
     if (req.files.length != 1)
@@ -253,10 +270,15 @@ async function imageUpload (req, fileId) {
           req.imageFile = newImageResponse;
         }).catch(async err => {
           // when uploading is done and deleting is not (delete the new image and try again to save image server disk size)
-          await imageKit.deleteFile(newImageResponse.fileId)
-            .catch(err => {
-              req.fileErrorMessage = "An error occurred during image upload. Please try again.";
-            });
+          // first condition if the image accidentally deleted from imagekit
+          if(err.message.match(/The requested file does not exist/i)) {
+            req.imageFile = newImageResponse;
+          } else {
+            await imageKit.deleteFile(newImageResponse.fileId)
+              .catch(err => {
+                req.fileErrorMessage = "An error occurred during image upload. Please try again.";
+              });
+          }
         });
       // when POST request
     } else {

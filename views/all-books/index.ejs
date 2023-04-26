@@ -2,7 +2,7 @@
 <%# now the method is get because we wants to search %>
 <form action="/all-Books" method="GET">
 <div>
-    <label for="title">title</label>
+    <label for="title">Title</label>
     <input type="text" id="title" name="title" autofocus
       onfocus="this.setSelectionRange(this.value.length,this.value.length);"
       value="<%= searchOptions.title  %>">
@@ -58,8 +58,8 @@
     <button onclick="document.querySelectorAll(`input`).forEach(input=>{
       input.defaultValue=''
     })
-    " type="reset" >Reset</button>
-    <button type="submit">Search</button>
+    " type="reset" class="btn btn-danger">Reset</button>
+    <button type="submit" class="btn btn-primary">Search</button>
 </form>
 <br>
 <% books.forEach(book=> { %>
