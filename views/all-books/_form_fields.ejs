@@ -1,3 +1,11 @@
+<%# the script and link tag below will be the external CSS and JS for any page uses this file
+    =========================================================================================
+    they will be extracted to layout.ejs and putted in script and style tags
+%>
+<script defer src="/js/book-input-form.js"></script>
+<link rel="stylesheet" href="/css/book-input-form.css">
+<%# ========================================================================================= %>
+
 <div class="form-row">
   <div>
     <label for="title">Title</label>
@@ -27,7 +35,7 @@
   
   <div>
     <label for="page-count">Page Count</label>
-    <input type="number" required name="pageCount" min="1" id="page-count" value="<%= book.pageCount%>">
+    <input type="number" required name="pageCount" min="<%= book.minPageCount %>" id="page-count" value="<%= book.pageCount%>">
   </div>
 </div>
 

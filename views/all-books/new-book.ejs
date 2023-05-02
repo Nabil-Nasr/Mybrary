@@ -2,8 +2,10 @@
 <%# enctype tells the server that the server will post multi-platform data that can has a file %>
 <form action="/all-books" method="POST" enctype="multipart/form-data">
   <%- include('_form_fields.ejs') %>
-  <div class="btn-row form-btn-row">
-    <a href="/all-books" class="btn btn-danger">Cancel</a>
-    <button type="submit" class="btn btn-primary">Create</button>
+  <div class="form-row">
+    <div class="btn-row">
+      <a href="/all-books" class="btn btn-danger">Cancel</a>
+      <button type="submit" class="btn btn-primary">Create</button>
+    </div>
   </div>
 </form>

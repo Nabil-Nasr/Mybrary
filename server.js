@@ -11,7 +11,13 @@ const allBooksRouter = require('./routes/all-books');
 
 app.set('view engine', 'ejs');
 app.set('layout', 'layouts/layout');
+// two lines below will extract js ,link and style tags from the rendered ejs to layout.ejs 
+// in the variables script and style
+app.set('layout extractScripts', true)
+app.set('layout extractStyles', true)
 app.use(expressLayouts);
+
+
 // _method will be used in front-end post request
 app.use(methodOverride("_method"));
 app.use(express.static('public'));

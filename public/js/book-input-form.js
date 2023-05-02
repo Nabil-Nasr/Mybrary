@@ -7,11 +7,11 @@ const maxSize = 1024 ** 2 * 2;
 submitButton.addEventListener("click", (eve) => {
   if (fileInput.files.length != 0) {
     if (fileInput.files.length != 1) 
-      createErrorMessage("Too many files ❌", eve);
+      createErrorMessage("Too Many Files ❌", eve);
     else if (!imageMimeTypes.includes(fileInput.files[0].type)) 
-      createErrorMessage("Wrong file type ❌", eve);
+      createErrorMessage("Wrong File Type ❌", eve);
     else if (fileInput.files[0].size > maxSize) 
-      createErrorMessage(`File too large (Maximum ==> ${returnFileSize(maxSize)}) ❌`, eve);
+      createErrorMessage(`File Too Large (Maximum ==> ${returnFileSize(maxSize)}) ❌`, eve);
     else 
       document.querySelector(`.client-error-message`).remove()
   }
@@ -26,41 +26,46 @@ function createErrorMessage (errorMessage, event) {
     const clientError = document.createElement('div');
     clientError.classList.add('client-error-message');
     clientError.innerText = errorMessage;
-    const errorParent = document.querySelector(`.error-message`)
+    const errorParent = document.querySelector(`.error-messages`)
     if(errorParent) {
       errorParent.appendChild(clientError)
     } else {
       const errorParent = document.createElement(`div`)
-      errorParent.classList.add('error-message')
+      errorParent.classList.add('error-messages')
       errorParent.appendChild(clientError)
-      document.querySelector(`header`).after(errorParent);
+      document.querySelector(`.no-js-wrapper`)?.after(errorParent);
     }
   }
+  scrollTo(0,0)
 }
 
 const fileInputWrapper=document.querySelector(`.file-input-wrapper`)
 fileInput.addEventListener("change",function(){
-  this.removeAttribute("style")
   const previousImage = document.querySelector(`.file-input-wrapper figure img`)
   URL.revokeObjectURL(previousImage?.src)
   previousImage?.parentElement.remove()
-  if (imageMimeTypes.includes(this.files[0].type)) {
+  this.removeAttribute("style")
+  if (this.files.length !=0) {
     const figure = document.createElement(`figure`)
 
     const img = document.createElement(`img`)
     img.src = URL.createObjectURL(this.files[0])
     // the line below is not wrong with search engines because it's temporary
-    img.alt = "Wrong image type ❌"
+    let file = "Image"
+    if(!imageMimeTypes.includes(this.files[0].type)){
+      file="File"
+    }
+    img.alt = `Wrong ${file} Type ❌`
     figure.appendChild(img)
 
     const figureCaption = document.createElement(`figcaption`)
 
     const span1 = document.createElement(`span`)
-    span1.innerText = `Image Name : ${this.files[0].name}`
+    span1.innerText = `${file} Name : ${this.files[0].name}`
     figureCaption.appendChild(span1)
 
     const span2 = document.createElement(`span`)
-    span2.innerText = `Image Size : ${returnFileSize(this.files[0].size)}`
+    span2.innerText = `${file} Size : ${returnFileSize(this.files[0].size)}`
     if(this.files[0].size > maxSize) {
       span2.classList.add('chosen-file-error')
       span2.innerText+=` ❌ Maximum ==> ${returnFileSize(maxSize)}`

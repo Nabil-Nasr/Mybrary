@@ -1,0 +1,75 @@
+:root {
+  --font-size-label: 1.2rem;
+  --color-border-form-input: hsl(var(--color-base-hue), 100%, 50%);
+  --color-border-form-input-focus: hsl(var(--color-base-hue), 100%, 80%);
+  --color-background-form-input: hsl(var(--color-base-hue), 100%, 31%);
+  --color-background-select-option: hsl(var(--color-base-hue), 100%, 10%);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--gap-main) 1rem;
+  margin-bottom: var(--gap-main);
+}
+
+.form-row > div:not(.btn-row) {
+  display: grid;
+  margin-top: var(--gap-main);
+  grid-template-rows: auto 1fr;
+}
+
+/* :first-of-type to not select file input wrapper in create book page */
+.form-row label:first-of-type {
+  font-size: var(--font-size-label);
+  margin-left: 0.25rem;
+  margin-bottom: 0.25rem;
+  position: relative;
+}
+
+.form-row input,
+.form-row select,
+.form-row textarea {
+  width: 100%;
+  height: 2rem;
+  padding: 0.25rem var(--gap-main);
+  border-radius: 0.25rem;
+  outline: none;
+  color: var(--color-main);
+  border: 1px solid var(--color-border-form-input);
+  background-color: var(--color-background-form-input);
+  font-size: 1rem;
+  font-weight: normal;
+  font-family: inherit;
+}
+
+.form-row input:not(input[type="file"]):focus,
+.form-row select:focus,
+.form-row textarea:focus {
+  border: 1px solid var(--color-border-form-input-focus);
+}
+
+.form-row select option {
+  background-color: var(--color-background-select-option);
+}
+
+/* for firefox (not standard but simple)*/
+.form-row input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* for webkit browsers (not standard but simple) (same effect as above)*/
+.form-row input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.form-row textarea {
+  height: 100%;
+  resize: none;
+}
+
+.form-row .btn-row:first-of-type{
+  justify-content: flex-end;
+}

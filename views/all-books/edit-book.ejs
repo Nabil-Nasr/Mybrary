@@ -1,8 +1,10 @@
 <h2>Edit Book</h2>
 <form action="/all-books/<%= book.id %>?_method=PUT" method="POST" enctype="multipart/form-data">
   <%- include('_form_fields.ejs') %>
-  <div class="btn-row form-btn-row">
-    <a href="/all-books" class="btn btn-danger">Cancel</a>
-    <button type="submit" class="btn btn-primary">Update</button>
+  <div class="form-row">
+    <div class="btn-row">
+      <a href="/all-books" class="btn btn-danger">Cancel</a>
+      <button type="submit" class="btn btn-primary">Update</button>
+    </div>
   </div>
 </form>

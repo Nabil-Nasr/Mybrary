@@ -1,0 +1,31 @@
+.cover-parent {
+  --gap-cover:var(--gap-main);
+  -webkit-columns: 3 200px;
+  -moz-columns: 3 200px;
+  columns: 3 200px;
+  column-gap: var(--gap-cover);
+}
+
+.cover-parent-lg {
+  -webkit-columns: 3 300px;
+  -moz-columns: 3 300px;
+  columns: 3 300px;
+}
+
+.cover-parent a {
+  display: flex;
+  align-items: center;
+  max-height: max(80vh,600px);
+  overflow: hidden;
+  box-shadow: 0 0 10px -5px var(--color-main-light);
+  margin-bottom: var(--gap-cover);
+  page-break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  -webkit-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.cover-parent img {
+  width: 100%;
+}
+

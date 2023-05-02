@@ -2,10 +2,13 @@
 @import url('shared/fonts.css');
 @import url('shared/header.css');
 @import url('shared/buttons.css');
+@import url('shared/form.css');
 
 :root {
-  font-family: 'Gotham Rounded','Courier New', Courier, monospace;
+  font-family: 'Gotham Rounded',sans-serif,monospace;
   color: var(--color-main-light);
+  font-size: 14px;
+  scroll-behavior: smooth;
 }
 
 *,*::before,*::after {
@@ -24,25 +27,64 @@ body {
   padding-inline: 1rem;
 }
 
-@media (min-width : 768px) {
+@media (min-width : 576px) {
   :root {
-    font-size: 20px;
+    font-size: 16px;
   }
   .container{
-      width: 750px;
+      max-width: 560px;
+  }
+}
+
+@media (min-width : 768px) {
+  :root {
+    font-size: 17px;
+  }
+  .container{
+      max-width: 750px;
   }
 }
 
 @media (min-width:992px) {
+  :root {
+    font-size: 18px;
+  }
   .container{
-      width: 970px;
+      max-width: 970px;
   }
 }
 
 @media (min-width:1200px) {
-  .container{
-      width: 1170px;
+  :root {
+    font-size: 19px;
   }
+  .container{
+      max-width: 1170px;
+  }
+}
+
+@media (min-width:1400px) {
+  :root {
+    font-size: 20px;
+  }
+  .container{
+      max-width: 1360px;
+  }
+}
+
+.container .error-messages {
+  text-align: center;
+  color: var(--color-text-error);
+  font-size: 1.2rem;
+  padding: var(--gap-main);
+  margin-bottom: var(--gap-main);
+  border: 1px solid currentColor;
+}
+
+.container .error-messages > :nth-child(2) {
+  margin-top: var(--gap-main);
+  border-top: inherit;
+  padding-top: var(--gap-main);
 }
 
 h2 {

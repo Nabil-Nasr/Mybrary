@@ -6,19 +6,33 @@
   <%# this for the hint that will be given to imagekit service %>
   <meta http-equiv="Accept-CH" content="DPR, Width">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <% if (locals.externalJSPath) { %>
-    <script defer src="<%= externalJSPath %>"></script>
-  <% } %>
+  <%# script variable below will include js tags that extracted by express itself from the rendered ejs files  %>
+  <%- script %>
   <link rel="stylesheet" href="/css/main.css">
-  <% if (locals.externalCSSPath) { %>
-    <link rel="stylesheet" href="<%= externalCSSPath %>">
-  <% } %>
+  <%- style %>
+  <link rel="shortcut icon" href="/images/mybrary.png" type="image/png">
   <title>Mybrary</title>
 </head>
 <body>
   <div class="container">
     <%- include('../partials/header') %>
     <div class="inner-container">
+      <div class="no-js-wrapper">
+        <noscript>
+          <%# for styling noscript tag when js disabled %>
+          <style>
+            .no-js-wrapper {
+              text-align: center;
+              color: var(--color-text-error);
+              font-size: 1.2rem;
+              padding: var(--gap-main);
+              margin-bottom: var(--gap-main);
+              border: 1px solid currentColor;
+            }
+          </style>
+        </noscript>
+        <noscript>Javascript is disabled in your browser some of the website features will not work ❌</noscript>
+      </div>
       <%- include('../partials/error-message') %>
       <%- body %>
     </div>

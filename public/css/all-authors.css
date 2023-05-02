@@ -1,0 +1,20 @@
+.authors-parent .author-row {
+  display: grid;
+  row-gap: var(--gap-main);
+  margin-bottom: 1rem;
+}
+
+@media (min-width:576px) {
+  .authors-parent .author-row {
+    grid-auto-flow: row;
+    justify-content: space-between;
+    align-items:flex-start;
+    grid-template-columns:1fr auto;
+  }
+}
+
+.authors-parent .author-row h3 {
+  margin: 0;
+  -ms-word-break: break-all;
+  word-break: break-all;
+}

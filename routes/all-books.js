@@ -64,7 +64,8 @@ router.get('/', async (req, res) => {
       res.render('all-books/index', {
         books,
         searchOptions: req.query,
-        authors
+        authors,
+        minPageCount:Book().minPageCount
       });
     }).catch(err => {
       res.redirect('/');
@@ -81,8 +82,7 @@ router.get('/new-book', (req, res) => {
       res.render('all-books/new-book', {
         book: new Book(),
         authors,
-        errorMessage,
-        externalJSPath: "/js/book-input-form.js",externalCSSPath : "/css/book-input-form.css"
+        errorMessage
       });
     })
     .catch(err => {
@@ -124,8 +124,7 @@ router.post('/', (req, res) => {
             res.render('all-books/new-book', { 
               book, 
               authors, 
-              errorMessage: req.fileErrorMessage, 
-              externalJSPath: "/js/book-input-form.js",externalCSSPath : "/css/book-input-form.css" });
+              errorMessage: req.fileErrorMessage});
           }).catch(err => {
             res.redirect('/');
           });
@@ -150,8 +149,7 @@ router.get('/:id/edit', (req, res) => {
         .then(book => {
           res.render('all-books/edit-book', {
             book,
-            authors,
-            externalJSPath: "/js/book-input-form.js",externalCSSPath : "/css/book-input-form.css"
+            authors
           });
         });
     })
@@ -193,8 +191,8 @@ router.put('/:id', (req, res) => {
             res.render('all-books/edit-book', { 
               book, 
               authors, 
-              errorMessage: req.fileErrorMessage, 
-              externalJSPath: "/js/book-input-form.js",externalCSSPath : "/css/book-input-form.css" });
+              errorMessage: req.fileErrorMessage 
+            });
           }).catch(err => {
             res.redirect('/');
           });
@@ -217,7 +215,7 @@ router.delete('/:id', (req, res) => {
 });
 
 async function validateInputs(req,fileId=null){
-  const minPageCount = new Book().minPageCount
+  const minPageCount = Book().minPageCount
   req.imageFile = {};
   if(req.body.pageCount != '' && req.body.pageCount < minPageCount) {
     req.fileErrorMessage = `Minimum Page Count Should be (${minPageCount}) but (${req.body.pageCount}) Provided.`
@@ -233,11 +231,11 @@ async function validateUpload (req, fileId = null) {
 
   if (req.files && req.files.length != 0) {
     if (req.files.length != 1)
-      req.fileErrorMessage = "Too many files";
+      req.fileErrorMessage = "Too Many Files";
     else if (!imageMimeTypes.includes(req.files[0].mimetype))
-      req.fileErrorMessage = "Wrong file type";
+      req.fileErrorMessage = "Wrong File Type";
     else if (req.files[0].size > maxSize)
-      req.fileErrorMessage = `File too large (Maximum => ${maxSize / 1024 ** 2}MB)`;
+      req.fileErrorMessage = `File Too Large (Maximum => ${maxSize / 1024 ** 2}MB)`;
     else
       await imageUpload(req, fileId);
 
@@ -247,7 +245,7 @@ async function validateUpload (req, fileId = null) {
       });
     });
   } else {
-    req.fileErrorMessage = "Cover image required";
+    req.fileErrorMessage = "Cover Image Required";
   }
 }
 
@@ -276,7 +274,7 @@ async function imageUpload (req, fileId) {
           } else {
             await imageKit.deleteFile(newImageResponse.fileId)
               .catch(err => {
-                req.fileErrorMessage = "An error occurred during image upload. Please try again.";
+                req.fileErrorMessage = "An Error Occurred During Image Upload. Please Try Again.";
               });
           }
         });
@@ -285,7 +283,7 @@ async function imageUpload (req, fileId) {
       req.imageFile = newImageResponse;
     }
   }).catch(err => {
-    req.fileErrorMessage = "An error occurred during image upload. Please try again.";
+    req.fileErrorMessage = "An Error Occurred During Image Upload. Please Try Again.";
   });
 }
 

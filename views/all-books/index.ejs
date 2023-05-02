@@ -1,77 +1,71 @@
 <h2>Search Books</h2>
 <%# now the method is get because we wants to search %>
 <form action="/all-Books" method="GET">
-<div>
-    <label for="title">Title</label>
-    <input type="text" id="title" name="title" autofocus
-      onfocus="this.setSelectionRange(this.value.length,this.value.length);"
-      value="<%= searchOptions.title  %>">
-</div>
-<div>
-    <label for="author">Author</label>
-    <select name="authorId" id="author">
-      <option value="">
-        <% authors.forEach(author=> { %>
-          <% if (author.id==searchOptions.authorId) { %>
-            <option selected value="<%= author.id %>" label="<%= author.name %>">
-          <% }else {%>
-            <option value="<%= author.id %>" label="<%= author.name %>">
-          <% }%>
-        <% }) %>
-    </select>
-</div>
-<div>
-  <label for="created-after">Created After</label>
-  <input type="date"  name="createdAfter" id="created-after"
-        value="<%= searchOptions.createdAfter%>">
-</div>
-<div>
-    <label for="created-before">Created Before</label>
-    <input type="date"  name="createdBefore" id="created-before"
-          value="<%= searchOptions.createdBefore%>">
-</div>
-<div>
-  <label for="published-after">Published After</label>
-  <input type="date"  name="publishedAfter" id="published-after"
-        value="<%= searchOptions.publishedAfter%>">
-</div>
-<div>
-    <label for="published-before">Published Before</label>
-    <input type="date"  name="publishedBefore" id="published-before"
-          value="<%= searchOptions.publishedBefore%>">
-</div>
+  <div class="form-row">
+    <div>
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title"
+          value="<%= searchOptions.title  %>">
+    </div>
+    <div>
+        <label for="author">Author</label>
+        <select name="authorId" id="author">
+          <option value="">
+            <% authors.forEach(author=> { %>
+              <% if (author.id==searchOptions.authorId) { %>
+                <option selected value="<%= author.id %>" label="<%= author.name %>">
+              <% }else {%>
+                <option value="<%= author.id %>" label="<%= author.name %>">
+              <% }%>
+            <% }) %>
+        </select>
+    </div>
+  </div>
+  <div class="form-row">
+    <div>
+      <label for="created-after">Created After</label>
+      <input type="date"  name="createdAfter" id="created-after"
+            value="<%= searchOptions.createdAfter%>">
+    </div>
+    <div>
+        <label for="created-before">Created Before</label>
+        <input type="date"  name="createdBefore" id="created-before"
+              value="<%= searchOptions.createdBefore%>">
+    </div>
+  </div>
+  <div class="form-row">
+    <div>
+      <label for="published-after">Published After</label>
+      <input type="date"  name="publishedAfter" id="published-after"
+            value="<%= searchOptions.publishedAfter%>">
+    </div>
+    <div>
+        <label for="published-before">Published Before</label>
+        <input type="date"  name="publishedBefore" id="published-before"
+              value="<%= searchOptions.publishedBefore%>">
+    </div>
+  </div>
 
+  <div class="form-row">
+    <div>
+      <label for="min-pagecount">Minimum Page Count</label>
+      <input type="number" min="<%= minPageCount %>" name="minPageCount" id="min-pagecount"
+            value="<%= searchOptions.minPageCount%>">
+    </div>
+    
+    <div>
+      <label for="max-pagecount">Maximum Page Count</label>
+      <input type="number"  min="<%= minPageCount %>"  name="maxPageCount" id="max-pagecount"
+            value="<%= searchOptions.maxPageCount%>">
+    </div>
+  </div>
 
-
-<div>
-  <label for="min-pagecount">Minimum PageCount</label>
-  <input type="number" min="1" name="minPageCount" id="min-pagecount"
-        value="<%= searchOptions.minPageCount%>">
-</div>
-
-<div>
-  <label for="max-pagecount">Maximum PageCount</label>
-  <input type="number"  min="1"  name="maxPageCount" id="max-pagecount"
-        value="<%= searchOptions.maxPageCount%>">
-</div>
-
-    <button onclick="document.querySelectorAll(`input`).forEach(input=>{
-      input.defaultValue=''
-    })
-    " type="reset" class="btn btn-danger">Reset</button>
-    <button type="submit" class="btn btn-primary">Search</button>
+  <div class="form-row">
+    <div class="btn-row">
+      <a href="/all-books" class="btn btn-danger">Reset</a>
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  </div>
 </form>
 <br>
-<% books.forEach(book=> { %>
-  <div>
-    <a href="/all-books/<%= book.id %>">
-      <img width="100" height="150" src="<%= `${book.coverImageURL}?tr=n-book_cover` %>"
-      srcset="
-      <%= `${book.coverImageURL}?tr=n-book_cover,w-400` %> 400w,
-      <%= `${book.coverImageURL}?tr=n-book_cover,w-800` %> 800w,
-      <%= `${book.coverImageURL}?tr=n-book_cover,w-1200` %> 1200w">
-    </a>
-    <div>Created at: <%= book.createAt.toISOString().split('T')[0]%></div>
-    <div>Published at: <%= book.publishDate.toISOString().split('T')[0]%></div>
-  </div>
-<% }) %>
+<%- include('../partials/books',{books,largeCover:false}) %>

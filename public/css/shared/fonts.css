@@ -1,127 +1,55 @@
 @font-face {
     font-family: 'Gotham Rounded';
-    src: url('/fonts/GothamRnd-BoldItalic.woff2') format('woff2'),
-        url('/fonts/GothamRnd-BoldItalic.woff') format('woff');
-    font-weight: bold;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Gotham Rounded';
-    src: url('/fonts/GothamRnd-Bold.woff2') format('woff2'),
-        url('/fonts/GothamRnd-Bold.woff') format('woff');
+    src: url('/fonts/GothamRnd-Bold.woff') format('woff');
     font-weight: bold;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Gotham Rounded';
-    src: url('/fonts/GothamRnd-Bold.woff2') format('woff2'),
-        url('/fonts/GothamRnd-Bold.woff') format('woff');
-    font-weight: bold;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Gotham Rounded';
-    src: url('/fonts/GothamRnd-Book.woff2') format('woff2'),
-        url('/fonts/GothamRnd-Book.woff') format('woff');
+    src: url('/fonts/GothamRnd-Book.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Gotham Rounded';
-    src: url('/fonts/GothamRnd-Book.woff2') format('woff2'),
-        url('/fonts/GothamRnd-Book.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Gotham Rounded';
-    src: url('/fonts/GothamRnd-BoldItalic.woff2') format('woff2'),
-        url('/fonts/GothamRnd-BoldItalic.woff') format('woff');
+    src: url('/fonts/GothamRnd-BoldItalic.woff') format('woff');
     font-weight: bold;
     font-style: italic;
 }
 
 @font-face {
     font-family: 'Gotham Rounded';
-    src: url('/fonts/GothamRnd-Light.woff2') format('woff2'),
-        url('/fonts/GothamRnd-Light.woff') format('woff');
+    src: url('/fonts/GothamRnd-Light.woff') format('woff');
     font-weight: 300;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Gotham Rounded';
-    src: url('/fonts/GothamRnd-BookItalic.woff2') format('woff2'),
-        url('/fonts/GothamRnd-BookItalic.woff') format('woff');
+    src: url('/fonts/GothamRnd-BookItalic.woff') format('woff');
     font-weight: normal;
     font-style: italic;
 }
 
 @font-face {
     font-family: 'Gotham Rounded';
-    src: url('/fonts/GothamRnd-Light.woff2') format('woff2'),
-        url('/fonts/GothamRnd-Light.woff') format('woff');
-    font-weight: 300;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Gotham Rounded';
-    src: url('/fonts/GothamRnd-BookItalic.woff2') format('woff2'),
-        url('/fonts/GothamRnd-BookItalic.woff') format('woff');
-    font-weight: normal;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Gotham Rounded';
-    src: url('/fonts/GothamRnd-MediumItalic.woff2') format('woff2'),
-        url('/fonts/GothamRnd-MediumItalic.woff') format('woff');
+    src: url('/fonts/GothamRnd-MediumItalic.woff') format('woff');
     font-weight: 500;
     font-style: italic;
 }
 
 @font-face {
     font-family: 'Gotham Rounded';
-    src: url('/fonts/GothamRnd-LightItalic.woff2') format('woff2'),
-        url('/fonts/GothamRnd-LightItalic.woff') format('woff');
+    src: url('/fonts/GothamRnd-LightItalic.woff') format('woff');
     font-weight: 300;
     font-style: italic;
 }
 
 @font-face {
     font-family: 'Gotham Rounded';
-    src: url('/fonts/GothamRnd-Medium.woff2') format('woff2'),
-        url('/fonts/GothamRnd-Medium.woff') format('woff');
-    font-weight: 500;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Gotham Rounded';
-    src: url('/fonts/GothamRnd-LightItalic.woff2') format('woff2'),
-        url('/fonts/GothamRnd-LightItalic.woff') format('woff');
-    font-weight: 300;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Gotham Rounded';
-    src: url('/fonts/GothamRnd-MediumItalic.woff2') format('woff2'),
-        url('/fonts/GothamRnd-MediumItalic.woff') format('woff');
-    font-weight: 500;
-    font-style: italic;
-}
-
-@font-face {
-    font-family: 'Gotham Rounded';
-    src: url('/fonts/GothamRnd-Medium.woff2') format('woff2'),
-        url('/fonts/GothamRnd-Medium.woff') format('woff');
+    src: url('/fonts/GothamRnd-Medium.woff') format('woff');
     font-weight: 500;
     font-style: normal;
 }

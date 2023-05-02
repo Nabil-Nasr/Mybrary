@@ -1,14 +1,2 @@
 <h2>Recently added</h2>
-<% books.forEach(book=> { %>
-  <div>
-    <a href="/all-books/<%= book.id %>">
-      <img width="100" height="150" src="<%= `${book.coverImageURL}?tr=n-book_cover` %>"
-      srcset="
-      <%= `${book.coverImageURL}?tr=n-book_cover,w-400` %> 400w,
-      <%= `${book.coverImageURL}?tr=n-book_cover,w-800` %> 800w,
-      <%= `${book.coverImageURL}?tr=n-book_cover,w-1200` %> 1200w">
-    </a>
-    <div>Created at: <%= book.createAt.toISOString().split('T')[0]%></div>
-    <div>Published at: <%= book.publishDate.toISOString().split('T')[0]%></div>
-  </div>
-<% }) ; %>
+<%- include('partials/books',{books,largeCover:true}) %>
