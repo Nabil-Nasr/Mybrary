@@ -1,6 +1,6 @@
 .book-container {
   display: grid;
-  gap: calc(var(--gap-main) * 2);
+  gap:calc(var(--gap-main) * 2.5) calc(var(--gap-main) * 2);
   align-items: flex-start;
   grid-template-columns: 1fr 2fr;
 }

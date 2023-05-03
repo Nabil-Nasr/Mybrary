@@ -1,0 +1,30 @@
+.advanced-search {
+  transform: scaleY(0);
+  max-height: 0;
+  overflow: hidden;
+  transition: transform var(--transition-main-duration), max-height var(--transition-main-duration);
+}
+
+#input-fields:target .advanced-search {
+  transform: scaleY(1);
+  max-height: 1000px;
+}
+
+#input-fields:target + .advanced-search-show {
+  max-height: 0;
+  padding: 0;
+  transform: scaleY(0);
+}
+
+.advanced-search-hide ,
+.advanced-search-show {
+  display: block;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  margin-left: auto;
+  /* fixed size required for transition */
+  max-height: 200px;
+  color: var(--color-main-light);
+  padding-block:var(--gap-main) ;
+}
