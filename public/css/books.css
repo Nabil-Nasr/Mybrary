@@ -29,3 +29,47 @@
   width: 100%;
 }
 
+/* this if the selector supported stop display the element to save html rendering when JS enabled */
+@supports selector(:has(a)) {
+  .cover-parent .noscript-wrapper {
+    display: none;
+  }
+}
+
+/* =============== if JS disabled =============== */
+
+/* :has() selector support is poor but no important if js disabled 
+if it's not supported the images place_holder will be shown*/
+.cover-parent .noscript-wrapper:has(a) {
+  display: grid;
+  margin-bottom: var(--gap-cover);
+  /* the lines below because if this element exists it will break */
+  page-break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  -webkit-break-inside: avoid;
+  break-inside: avoid;
+}
+
+/* this rule for the place_holder to not break in browsers that not supporting the selector*/
+@supports not selector(:has(a)) {
+  .cover-parent .noscript-wrapper {
+    /* the lines below because if this element exists it will break */
+    page-break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    -webkit-break-inside: avoid;
+    break-inside: avoid;
+  }
+}
+
+.cover-parent .noscript-wrapper:has(a) a {
+  margin: 0;
+}
+
+/* the three rules above maybe shown as they don't do anything 
+but they are important for consistency with JS enabled */
+
+
+.cover-parent .noscript-wrapper:has(a) + a {
+  display: none;
+}
+/* ============================================= */

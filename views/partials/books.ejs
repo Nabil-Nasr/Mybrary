@@ -4,6 +4,17 @@
 <% const coverParentClass = largeCover ? "cover-parent-lg" : ""; %>
 <div class="cover-parent <%= coverParentClass %>">
   <% books.forEach(book=> { %>
+    <div class="noscript-wrapper">
+      <noscript>
+        <a href="/all-books/<%= book.id %>">
+          <img
+          src="<%= `${book.coverImageURL}?tr=n-book_cover` %>"
+          srcset="<%= `${book.coverImageURL}?tr=n-book_cover,w-400` %> 400w,
+          <%= `${book.coverImageURL}?tr=n-book_cover,w-800` %> 800w,
+          <%= `${book.coverImageURL}?tr=n-book_cover,w-1200` %> 1200w">
+        </a>
+      </noscript>
+    </div>
     <a href="/all-books/<%= book.id %>">
       <img
       class="lazyload"
