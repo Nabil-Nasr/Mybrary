@@ -8,7 +8,7 @@ router.get('/',(req,res) => {
   // when we rendering index.ejs we call it's layout
   // sort query by creation
   // with limit 10 books
-  Book.find().sort({createAt:'desc'}).limit(10)
+  Book.find().sort({createAt:'desc'}).limit(50)
   .then(books=>{
     // sorting by creation time
     // res.render('index',{books:books.reverse()})

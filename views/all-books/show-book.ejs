@@ -1,17 +1,59 @@
+<link rel="stylesheet" href="/css/show-book.css">
+
+<% const formatter = new Intl.RelativeTimeFormat("en-us", {
+  numeric: 'auto'
+})
+
+const DIVISIONS = [
+  { amount: 60, name: 'seconds' },
+  { amount: 60, name: 'minutes' },
+  { amount: 24, name: 'hours' },
+  { amount: 7, name: 'days' },
+  { amount: 4.34524, name: 'weeks' },
+  { amount: 12, name: 'months' },
+  { amount: Number.POSITIVE_INFINITY, name: 'years' }
+]
+
+function formatTimeAgo(date) {
+  let duration = (date - new Date()) / 1000
+
+  for (let i = 0; i < DIVISIONS.length; i++) {
+    const division = DIVISIONS[i]
+    if (Math.abs(duration) < division.amount) {
+      return formatter.format(Math.round(duration), division.name)
+    }
+    duration /= division.amount
+  }
+} %>
+
 <h2><%= book.title %></h2>
-<div>
-  <img width="100" height="150" src="<%= `${book.coverImageURL}?tr=n-book_cover` %>"
-  srcset="
-  <%= `${book.coverImageURL}?tr=n-book_cover,w-400` %> 400w,
-  <%= `${book.coverImageURL}?tr=n-book_cover,w-800` %> 800w,
-  <%= `${book.coverImageURL}?tr=n-book_cover,w-1200` %> 1200w">
+<div class="book-container">
+  <div class="cover-container">
+    <div>
+      <img src="<%= `${book.coverImageURL}?tr=n-book_cover` %>"
+      srcset="
+      <%= `${book.coverImageURL}?tr=n-book_cover,w-400` %> 400w,
+      <%= `${book.coverImageURL}?tr=n-book_cover,w-800` %> 800w,
+      <%= `${book.coverImageURL}?tr=n-book_cover,w-1200` %> 1200w">
+    </div>
+    <div class="btn-grid">
+      <a href="/all-books/<%= book.id %>/edit" class="btn btn-primary">Edit</a>
+      <%- include('../partials/delete-form',{url:`/all-books/${book.id}`}) %>
+      <a href="/all-authors/<%= author.id %>" class="btn btn-primary">View Author</a>
+    </div>
+  </div>
+  <div class="book-details">
+    <div>Author : </div>
+    <div><%= author.name %></div>
+    <div>Uploaded : </div>
+    <div><%= formatTimeAgo(book.createAt)%></div>
+    <div>Publish Date : </div>
+    <div><%= new Intl.DateTimeFormat("en-UK",{weekday:"short",day:"numeric",year:"numeric",month:"short"}).format(book.publishDate)%></div>
+    <div>Page Count : </div>
+    <div><%= book.pageCount%></div>
+    <% if (book.description) { %>
+      <div>Description : </div>
+      <div><%= book.description%></div>
+    <% } %>
+  </div>
 </div>
-<div>Author: <%= author.name %></div>
-<div>Publish Date: <%= book.publishDate.toISOString().split('T')[0]%></div>
-<div>Page Count: <%= book.pageCount%></div>
-<% if (book.description) { %>
-  <div>Description: <%= book.description%></div>
-<% } %>
-<a href="/all-books/<%= book.id %>/edit" class="btn btn-primary">Edit</a>
-<%- include('../partials/delete-form',{url:`/all-books/${book.id}`}) %>
-<a href="/all-authors/<%= author.id %>" class="btn btn-primary">View Author</a>

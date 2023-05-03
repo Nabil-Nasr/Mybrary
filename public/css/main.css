@@ -90,4 +90,6 @@ body {
 h2 {
   font-size: 2rem;
   font-weight: 500;
+  -ms-word-break: break-all;
+  word-break: break-all;
 }

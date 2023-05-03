@@ -65,6 +65,12 @@
   appearance: none;
 }
 
+/* long selectors for more specificity */
+.form-row input[type="number"]:not(:focus):out-of-range,
+.form-row input[type="number"]:focus:out-of-range {
+  border:1px solid var(--color-text-error);
+}
+
 .form-row textarea {
   height: 100%;
   resize: none;

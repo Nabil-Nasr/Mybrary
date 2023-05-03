@@ -59,7 +59,7 @@ router.get('/', async (req, res) => {
       query = query.lte('pageCount', req.query.maxPageCount);
   }
 
-  query.find(searchOptions)
+  query.find(searchOptions).limit(100)
     .then(books => {
       res.render('all-books/index', {
         books,
@@ -109,6 +109,7 @@ router.post('/', (req, res) => {
       description,
       publishDate: new Date(publishDate),
       pageCount,
+      createAt:Date.now(),
       authorId,
       coverImageName: req.imageFile?.name,
       coverImageFileId: req.imageFile?.fileId,

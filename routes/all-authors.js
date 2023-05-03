@@ -62,7 +62,7 @@ router.post('/', (req, res) => {
 router.get("/:id",(req,res)=>{
     Author.findById(req.params.id)
     .then(author=>{
-      Book.find({authorId:author.id}).limit(10)
+      Book.find({authorId:author.id}).limit(50)
       .then(books=>{
         res.render('all-authors/show-author',{author,books})
       }).catch(err=>{
