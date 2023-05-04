@@ -58,7 +58,7 @@
 
 @keyframes image-show {
   from {
-    transform: rotateY(160deg);
+    transform: rotateY(160deg) scaleY(0);
   }
 }
 
@@ -113,8 +113,8 @@
   border-radius: var(--gap-main);
   padding: var(--gap-main) 1rem;
   font-size: 1.2rem;
-  margin-block: calc( - var(--gap-main)) 0.25rem;
-  margin-left: calc( - var(--gap-main));
+  margin-block: calc( -1 * var(--gap-main)) 0.25rem;
+  margin-left: calc( -1 * var(--gap-main));
   cursor: pointer;
   font-family: inherit;
   color: var(--color-btn-primary);

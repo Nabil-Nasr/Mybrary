@@ -56,6 +56,11 @@ fileInput.addEventListener("change",function(){
       file="File"
     }
     img.alt = `Wrong ${file} Type ❌`
+    img.addEventListener("load",()=> {
+      // scroll to the Top edge of the file input wrapper
+      const scroll = fileInputWrapper.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop) - 3
+      scrollTo(0,scroll)
+    })
     figure.appendChild(img)
 
     const figureCaption = document.createElement(`figcaption`)
