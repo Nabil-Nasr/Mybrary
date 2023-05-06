@@ -1,5 +1,5 @@
 import express from 'express'
-import Book from '../models/bookSchema.js'
+import Book from '../models/book-schema.js'
 
 const router = express.Router()
 

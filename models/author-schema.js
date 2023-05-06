@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import Book from './bookSchema.js'
+import Book from './book-schema.js'
 
 const Schema =mongoose.Schema
 

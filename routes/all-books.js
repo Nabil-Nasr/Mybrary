@@ -1,6 +1,6 @@
 import express from 'express'
-import Author from '../models/authorSchema.js'
-import Book from '../models/bookSchema.js'
+import Author from '../models/author-schema.js'
+import Book from '../models/book-schema.js'
 import fs from 'fs'
 import {fileTypeFromFile} from 'file-type'
 
