@@ -51,8 +51,10 @@
 /* title and description */
 .book-details div:nth-child(2),
 .book-details div:nth-child(9) {
-  -ms-word-break: break-word;
-  word-break: break-word;
+  overflow-wrap: anywhere;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
 }
 
 .book-details div:nth-child(9) {

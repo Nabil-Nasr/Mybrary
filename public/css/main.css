@@ -90,6 +90,8 @@ body {
 h2 {
   font-size: 2rem;
   font-weight: 500;
-  -ms-word-break: break-word;
-  word-break: break-word;
+  overflow-wrap: anywhere;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
 }
