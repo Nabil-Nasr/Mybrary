@@ -64,4 +64,5 @@
   flex-wrap: wrap;
   column-gap: calc(var(--gap-main) * 2);
   row-gap: calc(var(--gap-main) / 2);
+  white-space: pre-wrap;
 }
