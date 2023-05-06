@@ -1,13 +1,13 @@
-const express = require('express');
+import express from 'express'
+import expressLayouts from 'express-ejs-layouts'
+import methodOverride from 'method-override'
+import indexRouter from './routes/index.js'
+import allAuthorsRouter from './routes/all-authors.js'
+import allBooksRouter from './routes/all-books.js'
+import mongoose from 'mongoose'
+
 const app = express();
-const expressLayouts = require('express-ejs-layouts');
-const port = process.env.PORT || 3000;
-const methodOverride= require('method-override')
-
-
-const indexRouter = require('./routes/index');
-const allAuthorsRouter = require('./routes/all-authors');
-const allBooksRouter = require('./routes/all-books');
+const PORT = process.env.PORT || 3000;
 
 app.set('view engine', 'ejs');
 app.set('layout', 'layouts/layout');
@@ -26,11 +26,10 @@ app.use(express.urlencoded({ limit: '10mb', extended: false }));
 
 
 
-const mongoose = require('mongoose');
 mongoose.connect(process.env.DATABASE_URL)
 	.then(result => {
-		app.listen(port, (req, res) => {
-			console.log(`${require('./package.json').name} app is listening at http://localhost:${port}`);
+		app.listen(PORT, (req, res) => {
+			console.log(`mybrary app is listening at http://localhost:${PORT}`);
 			console.log("Mongoose Connected");
 		});
 	}).catch(err => {

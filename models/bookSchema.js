@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose'
+
 const Schema = mongoose.Schema
 
 const minPageCount = 1
@@ -52,4 +53,4 @@ bookSchema.virtual('minPageCount').get(function(){
 const Book = mongoose.model("Book",bookSchema)
 
 
-module.exports = Book
+export default Book;

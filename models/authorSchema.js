@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
-const Book = require('./bookSchema');
+import mongoose from 'mongoose'
+import Book from './bookSchema.js'
+
 const Schema =mongoose.Schema
 
 const authorSchema = new Schema({
@@ -26,4 +27,4 @@ authorSchema.pre('findOneAndDelete',function(next){
 
 const Author = mongoose.model("Author",authorSchema)
 
-module.exports = Author
+export default Author;

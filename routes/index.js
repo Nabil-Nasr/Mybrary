@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express'
+import Book from '../models/bookSchema.js'
+
 const router = express.Router()
-const Book=require('../models/bookSchema')
 
 
 
@@ -18,4 +19,4 @@ router.get('/',(req,res) => {
   })
 })
 
-module.exports =router
+export default router;

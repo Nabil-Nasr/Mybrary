@@ -1,8 +1,8 @@
 .advanced-search {
   transform: scaleY(0);
   max-height: 0;
-  overflow: hidden;
   transition: transform var(--transition-main-duration), max-height var(--transition-main-duration);
+  transform-origin: top;
 }
 
 #input-fields:target .advanced-search {
@@ -11,9 +11,7 @@
 }
 
 #input-fields:target + .advanced-search-show {
-  max-height: 0;
-  padding: 0;
-  transform: scaleY(0);
+  display: none;
 }
 
 .advanced-search-hide ,
@@ -23,8 +21,6 @@
   width: -moz-fit-content;
   width: fit-content;
   margin-left: auto;
-  /* fixed size required for transition */
-  max-height: 200px;
   color: var(--color-main-light);
   padding-block:var(--gap-main) ;
 }

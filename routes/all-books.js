@@ -1,12 +1,14 @@
-const express = require('express');
-const router = express.Router();
-const Author = require('../models/authorSchema');
-const Book = require('../models/bookSchema');
-const fs = require('fs');
+import express from 'express'
+import Author from '../models/authorSchema.js'
+import Book from '../models/bookSchema.js'
+import fs from 'fs'
+import {fileTypeFromFile} from 'file-type'
 
 //for using multiplatform data like images
-const multer = require('multer');
-const ImageKit = require('imagekit');
+import multer from 'multer'
+import ImageKit from 'imagekit'
+
+const router = express.Router();
 // we shouldn't change this path because it's the only writable path on cyclic.sh
 const tempUploadPath = "/tmp";
 // add file to disk storage then upload the buffer to the image server
@@ -233,7 +235,8 @@ async function validateUpload (req, fileId = null) {
   if (req.files && req.files.length != 0) {
     if (req.files.length != 1)
       req.fileErrorMessage = "Too Many Files";
-    else if (!imageMimeTypes.includes(req.files[0].mimetype))
+      // checking type by magic number
+    else if (!imageMimeTypes.includes((await fileTypeFromFile(req.files[0].path))?.mime))
       req.fileErrorMessage = "Wrong File Type";
     else if (req.files[0].size > maxSize)
       req.fileErrorMessage = `File Too Large (Maximum => ${maxSize / 1024 ** 2}MB)`;
@@ -289,4 +292,4 @@ async function imageUpload (req, fileId) {
 }
 
 
-module.exports = router;
+export default router;

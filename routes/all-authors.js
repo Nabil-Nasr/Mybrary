@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express'
+import Author from '../models/authorSchema.js'
+import Book from '../models/bookSchema.js'
+
 const router = express.Router();
-const Author = require('../models/authorSchema');
-const Book = require('../models/bookSchema');
 
 // all authors
 router.get('/', (req, res) => {
@@ -131,4 +132,4 @@ router.delete("/:id", (req,res)=>{
   })
 })
 
-module.exports = router;
+export default router;
