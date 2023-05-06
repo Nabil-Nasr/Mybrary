@@ -51,6 +51,7 @@
 /* title and description */
 .book-details div:nth-child(2),
 .book-details div:nth-child(9) {
+  word-wrap: anywhere;
   overflow-wrap: anywhere;
   -webkit-hyphens: auto;
   -moz-hyphens: auto;

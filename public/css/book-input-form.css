@@ -72,6 +72,7 @@
 .form-row label.file-input-wrapper figure figcaption {
   margin: 0.2rem;
   line-height: 1.3rem;
+  word-wrap: anywhere;
   overflow-wrap: anywhere;
   -webkit-hyphens: auto;
   -moz-hyphens: auto;
@@ -92,6 +93,7 @@
   padding: 1rem;
   cursor: pointer;
   white-space: normal;
+  word-wrap: anywhere;
   overflow-wrap: anywhere;
   -webkit-hyphens: auto;
   -moz-hyphens: auto;
