@@ -50,7 +50,15 @@
 
 /* title and description */
 .book-details div:nth-child(2),
-.book-details div:nth-child(10) {
-  -o-word-break: break-all;
-  word-break: break-all;
+.book-details div:nth-child(9) {
+  -ms-word-break: break-word;
+  word-break: break-word;
+}
+
+.book-details div:nth-child(9) {
+  grid-area: 5/span 2;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: calc(var(--gap-main) * 2);
+  row-gap: calc(var(--gap-main) / 2);
 }

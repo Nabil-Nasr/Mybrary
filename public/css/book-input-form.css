@@ -72,8 +72,8 @@
 .form-row label.file-input-wrapper figure figcaption {
   margin: 0.2rem;
   line-height: 1.3rem;
-  -ms-word-break: break-all;
-  word-break: break-all;
+  -ms-word-break: break-word;
+  word-break: break-word;
   display: grid;
   text-align: center;
 }
@@ -90,7 +90,8 @@
   padding: 1rem;
   cursor: pointer;
   white-space: normal;
-  word-wrap: break-word;
+  -ms-word-break: break-word;
+  word-break: break-word;
   border: none;
 }
 

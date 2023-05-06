@@ -52,8 +52,10 @@ function formatTimeAgo(date) {
     <div>Page Count : </div>
     <div><%= book.pageCount%></div>
     <% if (book.description) { %>
-      <div>Description : </div>
-      <div><%= book.description%></div>
+      <div>
+        <div>Description : </div>
+        <div><%= book.description%></div>
+      </div>
     <% } %>
   </div>
 </div>
