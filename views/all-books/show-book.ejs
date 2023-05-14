@@ -30,7 +30,8 @@ function formatTimeAgo(date) {
 <div class="book-container">
   <div class="cover-container">
     <div>
-      <img src="<%= `${book.coverImageURL}?tr=n-book_cover` %>"
+      <img alt="<%= book.title %>"
+      src="<%= `${book.coverImageURL}?tr=n-book_cover` %>"
       srcset="
       <%= `${book.coverImageURL}?tr=n-book_cover,w-400` %> 400w,
       <%= `${book.coverImageURL}?tr=n-book_cover,w-800` %> 800w,

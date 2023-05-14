@@ -8,6 +8,7 @@
       <noscript>
         <a href="/all-books/<%= book.id %>">
           <img
+          alt="<%= book.title %>"
           src="<%= `${book.coverImageURL}?tr=n-book_cover` %>"
           srcset="<%= `${book.coverImageURL}?tr=n-book_cover,w-400` %> 400w,
           <%= `${book.coverImageURL}?tr=n-book_cover,w-800` %> 800w,
@@ -17,6 +18,7 @@
     </div>
     <a href="/all-books/<%= book.id %>">
       <img
+      alt="<%= book.title %>"
       class="lazyload"
       src="<%= `${book.coverImageURL}?tr=n-place_holder` %>"
       data-sizes="auto"
