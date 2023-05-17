@@ -1,12 +1,11 @@
 import mongoose from 'mongoose'
 import Book from './book-schema.js'
 
-const Schema =mongoose.Schema
-
-const authorSchema = new Schema({
+const authorSchema = new mongoose.Schema({
   name:{
     type:String,
-    required:true
+    required:true,
+    trim:true
   }
 })
 // required above means that we can't post to the database without the name 

@@ -41,9 +41,9 @@
 
 <div class="form-row">
   <div class="form-item-shrink">
-    <label for="cover">Cover</label>
+    <label for="cover" <%- imgRequired?"":'class="not-required"' %>>Cover</label>
     <%# this is the image cover image file %>
-    <label class="file-input-wrapper"><input type="file" required name="cover" accept="image/jpeg,image/webp,image/bmp,image/png,image/gif" id="cover"></label>
+    <label class="file-input-wrapper"><input type="file" <%- imgRequired?"required":"" %> name="cover" accept="image/jpeg,image/webp,image/bmp,image/png,image/gif" id="cover"></label>
   </div>
   
   <div>

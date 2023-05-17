@@ -84,7 +84,8 @@ router.get('/new-book', (req, res) => {
       res.render('books/new-book', {
         book: new Book(),
         authors,
-        errorMessage
+        errorMessage,
+        imgRequired:true
       });
     })
     .catch(err => {
@@ -104,6 +105,7 @@ router.post('/', (req, res) => {
       pageCount,
       authorId
     } = req.body;
+    req.imgValidationRequired=true
     await validateInputs(req)
     // createAt will be created automatically
     const book = new Book({
@@ -127,7 +129,9 @@ router.post('/', (req, res) => {
             res.render('books/new-book', { 
               book, 
               authors, 
-              errorMessage: req.fileErrorMessage});
+              errorMessage: req.fileErrorMessage,
+              imgRequired:true
+            });
           }).catch(err => {
             res.redirect('/');
           });
@@ -152,7 +156,8 @@ router.get('/:id/edit', (req, res) => {
         .then(book => {
           res.render('books/edit-book', {
             book,
-            authors
+            authors,
+            imgRequired:false
           });
         });
     })
@@ -173,16 +178,21 @@ router.put('/:id', (req, res) => {
         authorId
       } = req.body;
       book = await Book.findById(req.params.id);
-      await validateInputs(req,book.coverImageFileId)
+      if(req.files.length){
+        req.imgValidationRequired=true
+        await validateInputs(req,book.coverImageFileId)
+        // the information of the new image
+        book.coverImageName = req.imageFile?.name;
+        book.coverImageFileId = req.imageFile?.fileId;
+        book.coverImageURL = req.imageFile?.url;
+      }else{
+        await validateInputs(req,book.coverImageFileId)
+      }
       book.title = title;
       book.description = description;
       book.publishDate = new Date(publishDate);
       book.pageCount = pageCount;
       book.authorId = authorId;
-      // the information of the new image
-      book.coverImageName = req.imageFile?.name;
-      book.coverImageFileId = req.imageFile?.fileId;
-      book.coverImageURL = req.imageFile?.url;
       await book.save();
       res.redirect(`/books/${book.id}`);
     } catch (err) {
@@ -194,7 +204,8 @@ router.put('/:id', (req, res) => {
             res.render('books/edit-book', { 
               book, 
               authors, 
-              errorMessage: req.fileErrorMessage 
+              errorMessage: req.fileErrorMessage ,
+              imgRequired:false
             });
           }).catch(err => {
             res.redirect('/');
@@ -224,7 +235,8 @@ async function validateInputs(req,fileId=null){
     req.fileErrorMessage = `Minimum Page Count Should be (${minPageCount}) but (${req.body.pageCount}) Provided.`
     console.log(req.fileErrorMessage);
   } else {
-    await validateUpload(req,fileId);
+    if(req.imgValidationRequired)
+      await validateUpload(req,fileId);
   }
 }
 

@@ -1,15 +1,17 @@
 import mongoose from 'mongoose'
 
-const Schema = mongoose.Schema
-
 const minPageCount = 1
 
-const bookSchema = new Schema({
+const bookSchema = new mongoose.Schema({
   title:{
     type:String,
-    required:true
+    required:true,
+    trim:true
   },
-  description:String,
+  description:{
+    type:String,
+    trim:true
+  },
   publishDate:{
     type:Date,
     required:true
@@ -24,7 +26,7 @@ const bookSchema = new Schema({
     required:true,
   },
   authorId:{
-    type:Schema.Types.ObjectId,
+    type:mongoose.Schema.Types.ObjectId,
     required:true,
     ref:'Author'
   },
