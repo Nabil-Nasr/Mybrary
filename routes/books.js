@@ -63,7 +63,7 @@ router.get('/', async (req, res) => {
 
   query.find(searchOptions).limit(100)
     .then(books => {
-      res.render('all-books/index', {
+      res.render('books/index', {
         books,
         searchOptions: req.query,
         authors,
@@ -74,21 +74,21 @@ router.get('/', async (req, res) => {
     });
 });
 
-//  /all-books/new-book
+//  /books/new-book
 router.get('/new-book', (req, res) => {
   Author.find()
     .then(authors => {
       let errorMessage;
       if (authors.length == 0)
         errorMessage = "Create One Author at Least Before Creating a Book";
-      res.render('all-books/new-book', {
+      res.render('books/new-book', {
         book: new Book(),
         authors,
         errorMessage
       });
     })
     .catch(err => {
-      res.redirect('/all-books');
+      res.redirect('/books');
     });
 });
 
@@ -120,11 +120,11 @@ router.post('/', (req, res) => {
 
     book.save()
       .then(newBook => {
-        res.redirect(`/all-books/${newBook.id}`);
+        res.redirect(`/books/${newBook.id}`);
       }).catch(err => {
         Author.find()
           .then(authors => {
-            res.render('all-books/new-book', { 
+            res.render('books/new-book', { 
               book, 
               authors, 
               errorMessage: req.fileErrorMessage});
@@ -139,7 +139,7 @@ router.get('/:id', (req, res) => {
   // populate('authorId') will replace the authorId from it's document  with the author itself
   Book.findById(req.params.id).populate('authorId')
     .then(book => {
-      res.render('all-books/show-book', { book, author: book.authorId });
+      res.render('books/show-book', { book, author: book.authorId });
     }).catch(err => {
       res.redirect('/');
     });
@@ -150,14 +150,14 @@ router.get('/:id/edit', (req, res) => {
     .then(authors => {
       Book.findById(req.params.id)
         .then(book => {
-          res.render('all-books/edit-book', {
+          res.render('books/edit-book', {
             book,
             authors
           });
         });
     })
     .catch(err => {
-      res.redirect('/all-books');
+      res.redirect('/books');
     });
 });
 
@@ -184,14 +184,14 @@ router.put('/:id', (req, res) => {
       book.coverImageFileId = req.imageFile?.fileId;
       book.coverImageURL = req.imageFile?.url;
       await book.save();
-      res.redirect(`/all-books/${book.id}`);
+      res.redirect(`/books/${book.id}`);
     } catch (err) {
       if (book == null)
         res.redirect('/');
       else
         Author.find()
           .then(authors => {
-            res.render('all-books/edit-book', { 
+            res.render('books/edit-book', { 
               book, 
               authors, 
               errorMessage: req.fileErrorMessage 
@@ -208,12 +208,12 @@ router.delete('/:id', (req, res) => {
     .then(book => {
       imageKit.deleteFile(book.coverImageFileId)
         .then(response => {
-          res.redirect('/all-books');
+          res.redirect('/books');
         }).catch(err => {
           res.redirect('/');
         });
     }).catch(err => {
-      res.redirect(`/all-books/${req.params.id}`);
+      res.redirect(`/books/${req.params.id}`);
     });
 });
 

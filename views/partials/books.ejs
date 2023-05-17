@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="/css/books.css">
+<link rel="stylesheet" href="/css/shared-books.css">
 <script defer src="/js/lazysizes.min.js"></script> 
 
 <% const coverParentClass = largeCover ? "cover-parent-lg" : ""; %>
@@ -6,7 +6,7 @@
   <% books.forEach(book=> { %>
     <div class="noscript-wrapper">
       <noscript>
-        <a href="/all-books/<%= book.id %>">
+        <a href="/books/<%= book.id %>">
           <img
           alt="<%= book.title %>"
           src="<%= `${book.coverImageURL}?tr=n-book_cover` %>"
@@ -16,7 +16,7 @@
         </a>
       </noscript>
     </div>
-    <a href="/all-books/<%= book.id %>">
+    <a href="/books/<%= book.id %>">
       <img
       alt="<%= book.title %>"
       class="lazyload"

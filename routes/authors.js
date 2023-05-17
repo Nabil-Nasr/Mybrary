@@ -17,7 +17,7 @@ router.get('/', (req, res) => {
   Author.find(searchOptions)
     .then(authors => {
       // when we rendering index.ejs we call it's layout
-      res.render('all-authors/index', {
+      res.render('authors/index', {
         authors: authors,
         searchNameQuery: req.query.name
       });
@@ -29,7 +29,7 @@ router.get('/', (req, res) => {
 
 router.get('/new-author', (req, res) => {
   // when we rendering index.ejs we call it's layout
-  res.render('all-authors/new-author', { author: new Author() });
+  res.render('authors/new-author', { author: new Author() });
 });
 
 router.post('/', (req, res) => {
@@ -40,7 +40,7 @@ router.post('/', (req, res) => {
   /*   author.save((err,newAuthor) => {
       if(err) {
         // if the author doesn't sended to database it opens again the page of the creation
-        res.render('all-authors/new-author',{
+        res.render('authors/new-author',{
           author:author,
           errorMessage:"Error creating author"
         })
@@ -51,9 +51,9 @@ router.post('/', (req, res) => {
   author.save()
     .then(newAuthor => {
       // newAuthor is same as author above
-      res.redirect(`/all-authors/${newAuthor.id}`);
+      res.redirect(`/authors/${newAuthor.id}`);
     }).catch(err => {
-      res.render('all-authors/new-author', {
+      res.render('authors/new-author', {
         author,
         errorMessage: "Error creating author"
       });
@@ -65,7 +65,7 @@ router.get("/:id",(req,res)=>{
     .then(author=>{
       Book.find({authorId:author.id}).limit(50)
       .then(books=>{
-        res.render('all-authors/show-author',{author,books})
+        res.render('authors/show-author',{author,books})
       }).catch(err=>{
         res.redirect('/')
       })
@@ -79,9 +79,9 @@ router.get("/:id",(req,res)=>{
 router.get("/:id/edit",(req,res)=>{
   Author.findById(req.params.id)
   .then(author=>{
-    res.render('all-authors/edit-author', { author });
+    res.render('authors/edit-author', { author });
   }).catch(err=>{
-    res.redirect("/all-authors")
+    res.redirect("/authors")
   })
 })
 
@@ -92,14 +92,14 @@ router.put("/:id",async(req,res)=>{
     author= await Author.findById(req.params.id)
     author.name=req.body.name
     await author.save()
-    res.redirect(`/all-authors/${author.id}`)
+    res.redirect(`/authors/${author.id}`)
   }catch{
     // first condition if the id not exists or there is no internet
     if(author==null)
       res.redirect('/')
     // second condition if there is a problem when saving the author
     else 
-      res.render('all-authors/edit-author', {
+      res.render('authors/edit-author', {
         author,
         errorMessage: "Error updating author"
       });
@@ -110,9 +110,9 @@ router.put("/:id",async(req,res)=>{
     author.name=req.body.name
     author.save()
     .then(author=>{
-      res.redirect(`/all-authors/${author.id}`)
+      res.redirect(`/authors/${author.id}`)
     }).catch(err=>{
-      res.render('all-authors/edit-author', {
+      res.render('authors/edit-author', {
         author,
         errorMessage: "Error updating author"
       });
@@ -126,9 +126,9 @@ router.put("/:id",async(req,res)=>{
 router.delete("/:id", (req,res)=>{
   Author.findByIdAndDelete(req.params.id)
   .then(author=>{
-    res.redirect('/all-authors')
+    res.redirect('/authors')
   }).catch(err=>{
-    res.redirect(`/all-authors/${req.params.id}`)
+    res.redirect(`/authors/${req.params.id}`)
   })
 })
 

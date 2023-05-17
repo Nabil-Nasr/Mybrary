@@ -2,8 +2,8 @@ import express from 'express'
 import expressLayouts from 'express-ejs-layouts'
 import methodOverride from 'method-override'
 import indexRouter from './routes/index.js'
-import allAuthorsRouter from './routes/all-authors.js'
-import allBooksRouter from './routes/all-books.js'
+import allAuthorsRouter from './routes/authors.js'
+import allBooksRouter from './routes/books.js'
 import mongoose from 'mongoose'
 
 const app = express();
@@ -47,5 +47,5 @@ db.once('open',() => {
 })
  */
 app.use('/', indexRouter);
-app.use('/all-authors', allAuthorsRouter);
-app.use('/all-books', allBooksRouter);
+app.use('/authors', allAuthorsRouter);
+app.use('/books', allBooksRouter);

@@ -1,11 +1,11 @@
 <%# the link tag below will be extracted and putted in layout.ejs in the variable style %>
 <%# ==================================================================================== %>
-<link rel="stylesheet" href="/css/all-authors.css">
+<link rel="stylesheet" href="/css/authors.css">
 <%# ==================================================================================== %>
 
 <h2>Search Authors</h2>
 <%# now the method is get because we wants to search %>
-<form action="/all-authors" method="GET">
+<form action="/authors" method="GET">
 
   <div class="form-row">
     <div>
@@ -24,10 +24,10 @@
       <div class="author-row">
         <h3><%= author.name %></h3>
         <div class="btn-row">
-          <a href="/all-authors/<%= author.id %>" class="btn btn-primary">View</a>
-          <a href="/all-authors/<%= author.id %>/edit" class="btn btn-primary">Edit</a>
+          <a href="/authors/<%= author.id %>" class="btn btn-primary">View</a>
+          <a href="/authors/<%= author.id %>/edit" class="btn btn-primary">Edit</a>
           <%# we should pass author.id only like this because it's string is a nodejs string (not ejs string) %>
-          <%- include('../partials/delete-form',{url:`/all-authors/${author.id}`}) %>
+          <%- include('../partials/delete-form',{url:`/authors/${author.id}`}) %>
         </div>
       </div>
   <% }) %>

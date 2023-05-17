@@ -38,9 +38,9 @@ function formatTimeAgo(date) {
       <%= `${book.coverImageURL}?tr=n-book_cover,w-1200` %> 1200w">
     </div>
     <div class="btn-grid">
-      <a href="/all-books/<%= book.id %>/edit" class="btn btn-primary">Edit</a>
-      <%- include('../partials/delete-form',{url:`/all-books/${book.id}`}) %>
-      <a href="/all-authors/<%= author.id %>" class="btn btn-primary">View Author</a>
+      <a href="/books/<%= book.id %>/edit" class="btn btn-primary">Edit</a>
+      <%- include('../partials/delete-form',{url:`/books/${book.id}`}) %>
+      <a href="/authors/<%= author.id %>" class="btn btn-primary">View Author</a>
     </div>
   </div>
   <div class="book-details">
