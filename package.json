@@ -32,7 +32,8 @@
   },
   "devDependencies": {
     "dotenv": "^16.0.3",
-    "nodemon": "^2.0.21"
+    "nodemon": "^2.0.21",
+    "morgan":"^1.10.0"
   },
   "keywords": [
     "ejs",

@@ -21,10 +21,6 @@ const bookSchema = new mongoose.Schema({
     min:[minPageCount,`Minimum Page Count Should be (${minPageCount})`],
     required:true
   },
-  createAt:{
-    type:Date,
-    required:true,
-  },
   authorId:{
     type:mongoose.Schema.Types.ObjectId,
     required:true,
@@ -42,7 +38,8 @@ const bookSchema = new mongoose.Schema({
     type:String,
     required:true
   }
-})
+  // timestamps for saving updatedAt and createdAt
+},{timestamps:true})
 // the author type above is referencing for an id in another object
 // and ref is what is object model that it refers to
 

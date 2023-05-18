@@ -4,6 +4,7 @@
   --color-main-background-dark:hsl(var(--color-base-hue),100%,8%);
   --color-main-background-light:hsl(var(--color-base-hue),100%,16%);
   --color-main-light:hsl(var(--color-base-hue),100%,87%);
+  --color-main-dark:hsl(var(--color-base-hue),100%,25%);
   --color-text-error:hsl(var(--color-base-hue-danger),100%,65%);
   --transition-main-duration:0.3s;
   --gap-main:0.5rem;

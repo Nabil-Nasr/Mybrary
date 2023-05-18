@@ -1,22 +1,27 @@
 import express from 'express'
-import Book from '../models/book-schema.js'
+import Book from '../models/book.js'
 
 const router = express.Router()
 
 
 
-router.get('/',(req,res) => {
-  // when we rendering index.ejs we call it's layout
-  // sort query by creation
-  // with limit 10 books
-  Book.find().sort({createAt:'desc'}).limit(50)
-  .then(books=>{
-    // sorting by creation time
-    // res.render('index',{books:books.reverse()})
-    res.render('index',{books})
-  }).catch(err=>{
-    res.render('index',{books:[]})
-  })
+router.get('/',async (req,res) => {
+  try{
+    if(req.query.page != undefined && (isNaN(req.query.page) || Math.floor(req.query.page) <= 0)){
+      res.redirect('/not-found')
+      return
+    }
+    const currentPage = req.query.page == undefined ? 1: Math.floor(req.query.page)
+    const booksLimit = 1
+    const skippedBooks = (currentPage - 1) * booksLimit
+    const booksCount = await Book.countDocuments()
+    const pagesCount = Math.ceil(booksCount / booksLimit)
+
+    const books = await Book.find().sort({createdAt:'desc'}).skip(skippedBooks).limit(booksLimit)
+    res.render('index',{books,pagesCount,currentPage})
+  }catch(err){
+    res.render('index',{books:[],pagesCount:1})
+  }
 })
 
 export default router;

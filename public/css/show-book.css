@@ -50,7 +50,7 @@
 
 /* title and description */
 .book-details div:nth-child(2),
-.book-details div:nth-child(9) {
+.book-details div:nth-child(11) {
   word-wrap: anywhere;
   overflow-wrap: anywhere;
   -webkit-hyphens: auto;
@@ -58,8 +58,8 @@
   hyphens: auto;
 }
 
-.book-details div:nth-child(9) {
-  grid-area: 5/span 2;
+.book-details div:nth-child(11) {
+  grid-area: 6/span 2;
   display: flex;
   flex-wrap: wrap;
   column-gap: calc(var(--gap-main) * 2);

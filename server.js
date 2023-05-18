@@ -1,13 +1,11 @@
-import express from 'express'
 import expressLayouts from 'express-ejs-layouts'
 import methodOverride from 'method-override'
 import indexRouter from './routes/index.js'
-import allAuthorsRouter from './routes/authors.js'
-import allBooksRouter from './routes/books.js'
-import mongoose from 'mongoose'
-
-const app = express();
-const PORT = process.env.PORT || 3000;
+import authorsRouter from './routes/authors.js'
+import booksRouter from './routes/books.js'
+import adminsRouter from './routes/admins.js'
+import express from 'express';
+import {app,database} from './configs/database.js';
 
 app.set('view engine', 'ejs');
 app.set('layout', 'layouts/layout');
@@ -24,28 +22,20 @@ app.use(express.static('public'));
 // for receiving post requests from front-end
 app.use(express.urlencoded({ limit: '10mb', extended: false }));
 
+database();
 
 
-mongoose.connect(process.env.DATABASE_URL)
-	.then(result => {
-		app.listen(PORT, (req, res) => {
-			console.log(`mybrary app is listening at http://localhost:${PORT}`);
-			console.log("Mongoose Connected");
-		});
-	}).catch(err => {
-		console.error(err);
-	});
 
-// another way to check the connection
-/* 
-const db = mongoose.connection
-db.on('error',(err) => {
-	console.error(err);
-})
-db.once('open',() => {
-	console.error("Mongoose Connected");
-})
- */
+if(process.env.NODE_ENV === 'development'){
+	try{
+		const morgan = (await import('morgan')).default
+		app.use(morgan('dev'))
+		console.log(`mode:${process.env.NODE_ENV}`);
+	}catch(error){
+		console.log(error);
+	}
+}
 app.use('/', indexRouter);
-app.use('/authors', allAuthorsRouter);
-app.use('/books', allBooksRouter);
+app.use('/authors', authorsRouter);
+app.use('/books', booksRouter);
+app.use('/admins', adminsRouter);
