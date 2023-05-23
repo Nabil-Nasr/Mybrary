@@ -1,6 +1,7 @@
+<% if (locals.book) { %>
 <h2>Edit Book</h2>
 <form action="/books/<%= book.id %>?_method=PUT" method="POST" enctype="multipart/form-data">
-  <%- include('_form_fields.ejs') %>
+  <%- include('_form_fields.ejs',{imgRequired:false}) %>
   <div class="form-row">
     <div class="btn-row">
       <a href="/books" class="btn btn-danger">Cancel</a>
@@ -8,3 +9,4 @@
     </div>
   </div>
 </form>
+<% } %>

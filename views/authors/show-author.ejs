@@ -1,8 +1,10 @@
-<h2><%= author.name %></h2>
-<div class="btn-row">
-  <a href="/authors/<%= author.id %>/edit-author" class="btn btn-primary">Edit</a>
-  <%- include('../partials/delete-form',{url:`/authors/${author.id}`}) %>
-</div>
+<% if (locals.author) { %>
+  <h2><%= author.name %></h2>
+  <div class="btn-row">
+    <a href="/authors/<%= author.id %>/edit-author" class="btn btn-primary">Edit</a>
+    <%- include('../partials/delete-form',{url:`/authors/${author.id}`}) %>
+  </div>
+<% } %>
 
 <% if (locals.books && books.length) { %>
   <h2>Books By Author</h2>

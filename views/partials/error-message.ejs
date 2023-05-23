@@ -1,5 +1,12 @@
 <% if(locals.errorMessage){ %>
-<div class="error-messages">
-  <div class="server-error-message">Server Error : <%= errorMessage %> ❌</div>
-</div>
+  <div class="error-messages">
+    <div class="server-error-message">Server Error : <%= errorMessage %> ❌</div>
+  </div>
+
+<% } else if(locals.errorMessages && errorMessages.length){ %>
+  <div class="error-messages">
+    <% errorMessages.forEach(errorMessage => { %>
+      <div class="server-error-message">Server Error : <%= errorMessage %> ❌</div>
+      <% }) %>
+  </div>
 <% } %>

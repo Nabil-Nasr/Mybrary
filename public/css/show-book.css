@@ -49,8 +49,7 @@
 }
 
 /* title and description */
-.book-details div:nth-child(2),
-.book-details div:nth-child(11) {
+.book-details div:nth-child(2) {
   word-wrap: anywhere;
   overflow-wrap: anywhere;
   -webkit-hyphens: auto;
@@ -58,7 +57,7 @@
   hyphens: auto;
 }
 
-.book-details div:nth-child(11) {
+.book-details > div:last-child:nth-child(odd) {
   grid-area: 6/span 2;
   display: flex;
   flex-wrap: wrap;

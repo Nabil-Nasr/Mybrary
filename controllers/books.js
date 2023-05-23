@@ -1,321 +1,220 @@
-import Author from '../models/author.js'
-import Book from '../models/book.js'
-import fs from 'fs'
-import {fileTypeFromFile} from 'file-type'
+import Author from '../models/author.js';
+import Book from '../models/book.js';
+import { ApiError } from "../utils/api-error.js";
+import { imageKit } from "../utils/image-upload.js";
 
-//for using multiplatform data like images
-import multer from 'multer'
-import ImageKit from 'imagekit'
-
-
-// we shouldn't change this path because it's the only writable path on cyclic.sh
-const tempUploadPath = "/tmp";
-// add file to disk storage then upload the buffer to the image server
-// this saving the app from crashing because out of memory
-const storage = multer.diskStorage({
-  destination: tempUploadPath,
-  filename: (req, file, callback) => {
-    // for saving the user file name (not giving random name)
-    // then add random number to avoid users overwriting files
-    // then deleting the suffix when uploading to the image server
-    const fileNameSuffix = `${(Math.round(Math.random() * 1e9) + "").slice(0, 7)}${Date.now()}`;
-    file.originalname = `${file.originalname}${fileNameSuffix}`;
-    callback(null, file.originalname);
-  }
-});
-const upload = multer({ storage });
-
-const imageKit = new ImageKit({
-  publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
-  privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
-  urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT
-});
 
 // @desc   Get all books
 // @route  GET /books
 // @access Public
-export const getBooks = async (req, res) => {
-  // creates query from the model to search with
-  let query = Book.find();
-  let authors = await Author.find();
-  const searchOptions = {};
+export const getBooks = async (req, res, next) => {
+  const { title, authorId, createdBefore, createdAfter, publishedBefore, publishedAfter, minPagesCount, maxPagesCount } = req.query;
+  try {
+    let query = Book.find();
+    let authors = await Author.find();
+    const searchOptions = {};
 
-  { // =========== add search queries ===========
-    if (req.query.title)
-      // search by regex in the query documents
-      query = query.regex('title', new RegExp(req.query.title, 'i'));
-    if (req.query.authorId)
-      searchOptions.authorId = req.query.authorId;
-    if (req.query.createdBefore)
-      // search with condition <=
-      query = query.lte('createdAt', req.query.createdBefore);
-    if (req.query.createdAfter)
-      // search with condition >=
-      query = query.gte('createdAt', req.query.createdAfter);
-    if (req.query.publishedBefore)
-      query = query.lte('publishDate', req.query.publishedBefore);
-    if (req.query.publishedAfter)
-      query = query.gte('publishDate', req.query.publishedAfter);
-    if (req.query.minPageCount)
-      query = query.gte('pageCount', req.query.minPageCount);
-    if (req.query.maxPageCount)
-      query = query.lte('pageCount', req.query.maxPageCount);
-  }
-
-  query.find(searchOptions).limit(100)
-    .then(books => {
-      res.render('books/index', {
-        books,
-        searchOptions: req.query,
-        authors,
-        minPageCount:Book().minPageCount
-      });
-    }).catch(err => {
-      res.redirect('/');
+    { // =========== add search queries ===========
+      if (title)
+        query = query.regex('title', new RegExp(title, 'i'));
+      if (authorId)
+        searchOptions.authorId = authorId;
+      if (createdBefore)
+        query = query.lte('createdAt', createdBefore);
+      if (createdAfter)
+        query = query.gte('createdAt', createdAfter);
+      if (publishedBefore)
+        query = query.lte('publishDate', publishedBefore);
+      if (publishedAfter)
+        query = query.gte('publishDate', publishedAfter);
+      if (minPagesCount)
+        query = query.gte('pagesCount', minPagesCount);
+      if (maxPagesCount)
+        query = query.lte('pagesCount', maxPagesCount);
+    }
+    const books = await query.find(searchOptions).limit(100);
+    res.render('books', {
+      books,
+      searchOptions: req.query,
+      authors,
+      minPagesCount: Book().minPagesCount
     });
-}
+  } catch {
+    const errorMessage = "Can't connect to database to get books";
+    next(new ApiError(errorMessage, 502, 'books', { books: [], searchOptions: req.query, errorMessage }));
+  }
+};
 
 // @desc   Get new book form page
 // @route  GET /books/new-book
 // @access Public
-export const getNewBookForm = (req, res) => {
-  Author.find()
-    .then(authors => {
-      let errorMessage;
-      if (authors.length == 0)
-        errorMessage = "Create One Author at Least Before Creating a Book";
-      res.render('books/new-book', {
-        book: new Book(),
-        authors,
-        errorMessage,
-        imgRequired:true
-      });
-    })
-    .catch(err => {
-      res.redirect('/books');
+export const getNewBookForm = async (req, res, next) => {
+  try {
+    const authors = await Author.find();
+    let errorMessage;
+    if (authors.length == 0) {
+      errorMessage = "One Author at Least Required Before Creating a Book";
+    }
+    res.render('books/new-book', {
+      book: new Book(),
+      authors,
+      errorMessage
     });
-}
+  } catch {
+    const errorMessage = "Can't connect to database to get the available authors before creating a Book";
+    next(new ApiError(errorMessage, 502, `books/new-book`, { errorMessage }));
+  }
+};
 
 // @desc   Create a new book
 // @route  POST /books
 // @access Public
-export const createBook = (req, res) => {
-  // uploading 1 file as array to validate the files number (avoiding manipulating in the file input)
-  upload.array('cover')(req, res, async err => {
-    // filtering and limiting the file by our method not by multer methods to avoid some multer crashes
-    const {
-      title,
-      description,
-      publishDate,
-      pageCount,
-      authorId
-    } = req.body;
-    req.imgValidationRequired=true
-    await validateInputs(req)
-    const book = new Book({
-      title,
-      description,
-      publishDate: new Date(publishDate),
-      pageCount,
-      authorId,
-      coverImageName: req.imageFile?.name,
-      coverImageFileId: req.imageFile?.fileId,
-      coverImageURL: req.imageFile?.url
-    });
+export const createBook = async (req, res, next) => {
+  try {
+    const book = await Book.create(req.body);
+    res.redirect(`/books/${book.id}`);
+  } catch (err) {
+    let errorMessages = [];
+    // for uniqueness error most of the time
+    if (err.errors) {
+      // push all error messages from schema paths
+      for (let errorMessage of Object.values(err.errors).map(val => val.message)) {
+        errorMessages.push(errorMessage);
+      }
+    }
+    const tempMessage = "Can't connect to database to add new book";
+    if (!errorMessages.length) {
+      errorMessages[0] = tempMessage;
+    }
 
-    book.save()
-      .then(newBook => {
-        res.redirect(`/books/${newBook.id}`);
-      }).catch(err => {
-        Author.find()
-          .then(authors => {
-            res.render('books/new-book', { 
-              book, 
-              authors, 
-              errorMessage: req.fileErrorMessage,
-              imgRequired:true
-            });
-          }).catch(err => {
-            res.redirect('/');
-          });
-      });
-  });
-}
+    let authors = [];
+    try {
+      if (req.body.coverImageFileId) {
+        await imageKit.deleteFile(req.body.coverImageFileId);
+      }
+      authors = await Author.find();
+    } catch {
+      return next(new ApiError(tempMessage, 502, `books/new-book`, { errorMessage: tempMessage }));
+    }
+    if (authors.length == 0) {
+      errorMessages.unshift("One Author at Least Required Before Creating a Book");
+    }
+
+    next(new ApiError("Invalid book details", 502, `books/new-book`, { book: req.body, authors, errorMessages }));
+  }
+};
 
 // @desc   Get book details
 // @route  GET /books/:id
 // @access Public
-export const getBook = (req, res) => {
-  // populate('authorId') will replace the authorId from it's document  with the author itself
-  Book.findById(req.params.id).populate('authorId')
-    .then(book => {
-      res.render('books/show-book', { book, author: book.authorId });
-    }).catch(err => {
-      res.redirect('/');
-    });
-}
+export const getBook = async (req, res, next) => {
+  const { id } = req.params;
+  const {bookErrorMessage:errorMessage} = req.session
+  delete req.session.bookErrorMessage;
+  try {
+    const book = await Book.findById(id).populate('authorId');
+    if (!book) {
+      return next(new ApiError("Wrong book id", 404));
+    }
+    res.render('books/show-book', { book, author: book.authorId ,errorMessage});
+  } catch {
+    const errorMessage = "Can't connect to database to get book details";
+    next(new ApiError(errorMessage, 502, 'books/show-book', { errorMessage }));
+  }
+};
 
 // @desc   Get edit book details
 // @route  GET /books/:id/edit-book
 // @access Public
-export const getEditBookForm = (req, res) => {
-  Author.find()
-    .then(authors => {
-      Book.findById(req.params.id)
-        .then(book => {
-          res.render('books/edit-book', {
-            book,
-            authors,
-            imgRequired:false
-          });
-        });
-    })
-    .catch(err => {
-      res.redirect('/books');
-    });
-}
+export const getEditBookForm = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const authors = await Author.find();
+    const book = await Book.findById(id);
+    if (!book) {
+      return next(new ApiError("Wrong book id", 404));
+    }
+    res.render('books/edit-book', { book, authors });
+  } catch {
+    const errorMessage = "Can't connect to database to get book details that will be edited";
+    next(new ApiError(errorMessage, 502, 'books/edit-book', { errorMessage }));
+  }
+};
 
 // @desc   Update book details
 // @route  PUT /books/:id
 // @access Public
-export const updateBook = (req, res) => {
-  upload.array('cover')(req, res, async err => {
-    let book;
-    try {
-      const {
-        title,
-        description,
-        publishDate,
-        pageCount,
-        authorId
-      } = req.body;
-      book = await Book.findById(req.params.id);
-      if(req.files.length){
-        req.imgValidationRequired=true
-        await validateInputs(req,book.coverImageFileId)
-        // the information of the new image
-        book.coverImageName = req.imageFile?.name;
-        book.coverImageFileId = req.imageFile?.fileId;
-        book.coverImageURL = req.imageFile?.url;
-      }else{
-        await validateInputs(req,book.coverImageFileId)
-      }
-      book.title = title;
-      book.description = description;
-      book.publishDate = new Date(publishDate);
-      book.pageCount = pageCount;
-      book.authorId = authorId;
-      await book.save();
-      res.redirect(`/books/${book.id}`);
-    } catch (err) {
-      if (book == null)
-        res.redirect('/');
-      else
-        Author.find()
-          .then(authors => {
-            res.render('books/edit-book', { 
-              book, 
-              authors, 
-              errorMessage: req.fileErrorMessage ,
-              imgRequired:false
-            });
-          }).catch(err => {
-            res.redirect('/');
-          });
+export const updateBook = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const book = await Book.findById(id);
+    if (!book) {
+      const errorMessage = "Wrong book id for updating";
+      return next(new ApiError(errorMessage, 502, 'errors/404', { errorMessage }));
     }
-  });
-}
+    await book.updateOne(req.body, { runValidators: true });
+    res.redirect(`/books/${book.id}`);
+  } catch (err) {
+    let errorMessages = [];
+    // for uniqueness error most of the time
+    if (err.errors) {
+      // push all error messages from schema paths
+      for (let errorMessage of Object.values(err.errors).map(val => val.message)) {
+        errorMessages.push(errorMessage);
+      }
+    }
+    const tempMessage = "Can't connect to database to update book details";
+    if (!errorMessages.length) {
+      errorMessages[0] = tempMessage;
+    }
+
+    let authors = [];
+    try {
+      if (req.body.coverImageFileId) {
+        await imageKit.deleteFile(req.body.coverImageFileId);
+      }
+      authors = await Author.find();
+    } catch (err) {
+      return next(new ApiError(tempMessage, 502, `books/edit-book`, { errorMessage: tempMessage }));
+    }
+    if (authors.length == 0) {
+      errorMessages.unshift("One Author at Least Required Before Creating a Book");
+    }
+
+    next(new ApiError("Invalid book details", 502, `books/edit-book`, { book: { ...req.body, id }, authors, errorMessages }));
+  }
+};
 
 // @desc   Delete a book
 // @route  DELETE /books/:id
 // @access Public
-export const deleteBook = (req, res) => {
-  Book.findByIdAndDelete(req.params.id)
-    .then(book => {
-      imageKit.deleteFile(book.coverImageFileId)
-        .then(response => {
-          res.redirect('/books');
-        }).catch(err => {
-          res.redirect('/');
-        });
-    }).catch(err => {
-      res.redirect(`/books/${req.params.id}`);
-    });
-}
-
-
-
-async function validateInputs(req,fileId=null){
-  const minPageCount = Book().minPageCount
-  req.imageFile = {};
-  if(req.body.pageCount != '' && req.body.pageCount < minPageCount) {
-    req.fileErrorMessage = `Minimum Page Count Should be (${minPageCount}) but (${req.body.pageCount}) Provided.`
-    console.log(req.fileErrorMessage);
-  } else {
-    if(req.imgValidationRequired)
-      await validateUpload(req,fileId);
-  }
-}
-
-async function validateUpload (req, fileId = null) {
-  const imageMimeTypes = ['image/jpeg', 'image/bmp', 'image/webp', 'image/png', 'image/gif'];
-  const maxSize = 2 * 1024 ** 2;
-
-  if (req.files && req.files.length != 0) {
-    if (req.files.length != 1)
-      req.fileErrorMessage = "Too Many Files";
-      // checking type by magic number
-    else if (!imageMimeTypes.includes((await fileTypeFromFile(req.files[0].path))?.mime))
-      req.fileErrorMessage = "Wrong File Type";
-    else if (req.files[0].size > maxSize)
-      req.fileErrorMessage = `File Too Large (Maximum => ${maxSize / 1024 ** 2}MB)`;
-    else
-      await imageUpload(req, fileId);
-
-    req.files.forEach(file => {
-      fs.unlink(file.path, err => {
-        console.log(file.originalname, err ? err : " deleted");
-      });
-    });
-  } else {
-    req.fileErrorMessage = "Cover Image Required";
-  }
-}
-
-
-async function imageUpload (req, fileId) {
-  // imagekit adds unique suffix to the filename
-  await imageKit.upload({
-    file: fs.readFileSync(req.files[0].path),
-    // add supporting of arabic letters
-    fileName: Buffer.from(req.files[0].originalname, 'latin1').toString('utf-8').slice(0, -(7 + `${Date.now()}`.length)),
-    folder: process.env.IMAGEKIT_UPLOAD_FOLDER,
-    useUniqueFileName: true
-  }).then(async newImageResponse => {
-    // when PUT request
-    if (fileId) {
-      // delete old image
-      await imageKit.deleteFile(fileId)
-        .then(deletedImageResponse => {
-          // when uploading and deleting is done
-          req.imageFile = newImageResponse;
-        }).catch(async err => {
-          // when uploading is done and deleting is not (delete the new image and try again to save image server disk size)
-          // first condition if the image accidentally deleted from imagekit
-          if(err.message.match(/The requested file does not exist/i)) {
-            req.imageFile = newImageResponse;
-          } else {
-            await imageKit.deleteFile(newImageResponse.fileId)
-              .catch(err => {
-                req.fileErrorMessage = "An Error Occurred During Image Upload. Please Try Again.";
-              });
-          }
-        });
-      // when POST request
-    } else {
-      req.imageFile = newImageResponse;
+export const deleteBook = async(req, res,next) => {
+  const {id}=req.params;
+  let book;
+  let deleted = {};
+  try {
+    book = await Book.findByIdAndDelete(id);
+    if(!book){
+      const errorMessage = "Wrong book id for deleting";
+      return next(new ApiError(errorMessage, 502, 'errors/404',{errorMessage}))
     }
-  }).catch(err => {
-    req.fileErrorMessage = "An Error Occurred During Image Upload. Please Try Again.";
-  });
-}
+    deleted.book=true
+    await imageKit.deleteFile(book.coverImageFileId)
+    deleted.image = true;
+    res.redirect('/books');
+  } catch {
+    let errorMessage = "Can't connect to database to delete book details";
+    
+    if(deleted.book && !deleted.image){
+      try{
+        book = await Book.create(book)
+        req.session.bookErrorMessage = errorMessage
+        return res.redirect(`/books/${book.id}`);
+      }catch{
+        errorMessage = "Can't connect to image server to delete cover image";
+      }
+    }
+
+    next(new ApiError(errorMessage, 502, 'books/show-book',{errorMessage}));
+  }
+};

@@ -29,13 +29,12 @@
 <div class="form-row">
   <div>
     <label for="publish-date">Publish Date</label>
-    <input type="date" required name="publishDate" id="publish-date"
-      value="<%= book.publishDate ? book.publishDate.toISOString().split('T')[0]:''%>">
+    <input type="date" required name="publishDate" id="publish-date" value="<%= book.publishDate instanceof Date ? book.publishDate.toISOString().split('T')[0]:book.publishDate %>">
   </div>
   
   <div>
-    <label for="page-count">Page Count</label>
-    <input type="number" required name="pageCount" min="<%= book.minPageCount %>" id="page-count" value="<%= book.pageCount%>">
+    <label for="pages-count">Pages Count</label>
+    <input type="number" required name="pagesCount" min="<%= book.minPagesCount %>" id="pages-count" value="<%= book.pagesCount%>">
   </div>
 </div>
 
@@ -48,6 +47,6 @@
   
   <div>
     <label for="description">Description</label>
-    <textarea name="description" id="description" cols="30" rows="10"><%= book.description%></textarea>
+    <textarea name="description" required id="description" cols="30" rows="10"><%= book.description%></textarea>
   </div>
 </div>

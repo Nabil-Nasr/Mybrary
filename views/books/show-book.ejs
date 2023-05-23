@@ -1,3 +1,4 @@
+<% if (locals.book) { %>
 <link rel="stylesheet" href="/css/show-book.css">
 
 <% const formatter = new Intl.RelativeTimeFormat("en-us", {
@@ -52,8 +53,8 @@ function formatTimeAgo(date) {
     <div><%= formatTimeAgo(book.updatedAt)%></div>
     <div>Publish Date : </div>
     <div><%= new Intl.DateTimeFormat("en-UK",{weekday:"short",day:"numeric",year:"numeric",month:"short"}).format(book.publishDate)%></div>
-    <div>Page Count : </div>
-    <div><%= book.pageCount%></div>
+    <div>Pages Count : </div>
+    <div><%= book.pagesCount%></div>
     <% if (book.description) { %>
       <div>
         <div>Description : </div>
@@ -62,3 +63,4 @@ function formatTimeAgo(date) {
     <% } %>
   </div>
 </div>
+<% } %>

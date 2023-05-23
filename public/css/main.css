@@ -66,7 +66,9 @@ body {
   }
 }
 
-.container .error-messages {
+.container .error-messages,
+.container .page-not-found ,
+.container .rate-limited {
   text-align: center;
   color: var(--color-text-error);
   font-size: 1.2rem;
@@ -75,7 +77,12 @@ body {
   border: 1px solid currentColor;
 }
 
-.container .error-messages > :nth-child(2) {
+.container .page-not-found ,
+.container .rate-limited {
+  border: none;
+}
+
+.container .error-messages > :nth-child(n+2) {
   margin-top: var(--gap-main);
   border-top: inherit;
   padding-top: var(--gap-main);

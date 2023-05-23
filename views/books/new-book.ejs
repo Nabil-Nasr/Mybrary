@@ -1,7 +1,8 @@
+<% if (locals.book) { %>
 <h2>New Book</h2>
 <%# enctype tells the server that the server will post multi-platform data that can has a file %>
 <form action="/books" method="POST" enctype="multipart/form-data">
-  <%- include('_form_fields.ejs') %>
+  <%- include('_form_fields.ejs',{imgRequired:true}) %>
   <div class="form-row">
     <div class="btn-row">
       <a href="/books" class="btn btn-danger">Cancel</a>
@@ -9,3 +10,4 @@
     </div>
   </div>
 </form>
+<% } %>

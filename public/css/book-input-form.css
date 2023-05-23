@@ -13,8 +13,8 @@
   flex-grow: 1;
 }
 
-/* we used three :not() instead of one with three argument because of browsers supporting is poor*/
-.form-row label:not(label.file-input-wrapper):not(label[for="description"]):not(label.not-required)::before {
+/* we used two :not() instead of one with three argument because of browsers supporting is poor*/
+.form-row label:not(label.file-input-wrapper):not(label.not-required)::before {
   content: "*";
   position: absolute;
   left: -0.6rem;

@@ -1,0 +1,52 @@
+<% if (pagesCount>1) { %>
+  <link rel="stylesheet" href="/css/pagination.css">
+  <div class="pagination-parent">
+
+    <% if (currentPage>1) { %>
+      <a class="previous-page" rel="prev" href="?page=<%= currentPage-1 %>"> &lt; Previous</a>
+    <% }else { %>
+      <span class="previous-page disabled"> &lt; Previous</span>
+    <% } %>
+
+    <div class="pages">
+
+      <% if(currentPage==1) { %>
+        <em class="current">1</em>
+      <% }else { %>
+        <a href="?page=1">1</a>
+      <% } %>
+
+      <% const loopStart=Math.max(currentPage-2,2) %>
+      <% if (loopStart>2 && pagesCount>2) { %>
+        ...
+      <% } %>
+      
+      <% const loopEnd= Math.min(currentPage+2,pagesCount-1)%>
+      <% for( let i = loopStart ; i <= loopEnd; i++ ) { %>
+        <% if(currentPage==i) { %>
+          <em class="current"><%= currentPage %></em>
+        <% }else { %>
+          <a href="?page=<%= i %>"><%= i %></a>
+        <% } %>
+      <% } %>
+
+      <% if ((loopEnd+1)<pagesCount) { %>
+        ...
+      <% } %>
+      
+      <% if(currentPage==pagesCount) { %>
+        <em class="current"><%= currentPage %></em>
+      <% }else { %>
+        <a href="?page=<%= pagesCount %>"><%= pagesCount %></a>
+      <% } %>
+
+    </div>
+
+    <% if (currentPage<pagesCount) { %>
+      <a class="next-page" rel="next" href="?page=<%= currentPage+1 %>">Next &gt; </a>
+    <% }else { %>
+      <span class="next-page disabled">Next &gt; </span>
+    <% } %>
+
+  </div>
+<% } %>
