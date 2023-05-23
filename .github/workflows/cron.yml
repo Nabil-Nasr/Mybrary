@@ -1,0 +1,12 @@
+name: Visit Link Every 5 Minutes
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+
+jobs:
+  visit-link:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Visit Link
+        run: curl https://mybrary-app-6090.onrender.com/authors/new-author
