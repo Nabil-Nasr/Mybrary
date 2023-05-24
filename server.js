@@ -12,7 +12,10 @@ import booksRouter from './routes/books.js';
 import indexRouter from './routes/index.js';
 import { ApiError } from "./utils/api-error.js";
 
-
+if(process.env.NUMBER_OF_PROXIES){
+	// set number of proxies between user and server to limit the user by id and not limiting all users
+	app.set("trust proxy",process.env.NUMBER_OF_PROXIES)
+}
 app.set('view engine', 'ejs');
 app.set('layout', 'layouts/layout');
 // two lines below will extract js ,link and style tags from the rendered ejs to layout.ejs 
@@ -42,17 +45,17 @@ if(process.env.NODE_ENV === 'development'){
 	}
 }
 
+
 // ============== some security ===================
 const windowMs = 30 * 60 * 1000
-const rateLimitOptions = {
+app.use(rateLimit({
 	windowMs,
 	max: 100, // Limit each IP to 100 requests per `window` (here, per 30 minutes)
-	message: `Too many requests from this IP, please try again in ${windowMs/60/1000} minutes`,
-	handler:async (req, res, next) => {
-		return next(new ApiError("Too many requests",429,"errors/429",{layout:false,rateLimitMessage:rateLimitOptions.message}))
-	}
-}
-app.use(rateLimit(rateLimitOptions))
+	message:`Too many requests from this IP, please try again in ${windowMs/60/1000} minutes`,
+	handler:async (req, res, next,options) => 
+	        next(new ApiError("Too many requests",429,"errors/429",{layout:false,rateLimitMessage:options.message}))
+
+}))
 
 // Middleware to protect against HTTP Parameter Pollution attacks
 app.use(hpp());
