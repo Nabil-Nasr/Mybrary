@@ -71,8 +71,11 @@ export const createAuthor = async (req, res, next) => {
 // @access Public
 export const getAuthor = async (req, res, next) => {
   const { id: authorId } = req.params;
-  const { authorErrorMessage: errorMessage } = req.session;
-  delete req.session.authorErrorMessage;
+  let errorMessage;
+  if (req.session[authorId]) {
+    ({ authorErrorMessage: errorMessage } = req.session[authorId]);
+    delete req.session[authorId];
+  }
   try {
     // throws error if the author id in wrong format
     // and this handled before in the validator
@@ -164,7 +167,8 @@ export const deleteAuthor = async (req, res, next) => {
   } catch (err) {
     // this message comes from the pre function in Author model
     if (`${err.message}`.match("has books and can't be deleted")) {
-      req.session.authorErrorMessage = err.message;
+      req.session[id] = {};
+      req.session[id].authorErrorMessage = err.message;
       return res.redirect(`/authors/${id}`);
     }
     const errorMessage = "Can't connect to database to delete author details";
