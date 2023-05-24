@@ -1,14 +1,4 @@
 <% if(books.length) { %>
   <h2>Recently added</h2>
-<%}else if (pagesCount == 0) { %>
-  <div class="page-not-found">
-    <h1 class="server-error-message">There is no books for now 🥲</h1>
-  </div>
-<%# this shouldn't be else only because when there is no database connection the pagesCount=currentPage=1 %>
-<%}else if (currentPage>pagesCount) { %>
-  <div class="page-not-found">
-    <h1 class="server-error-message">There is no more books</h1>
-  </div>
-<% } %>
+<%}%>
 <%- include('partials/books',{books,largeCover:true}) %>
-<%- include('partials/pagination',{currentPage,pagesCount}) %>

@@ -1,6 +1,7 @@
 import Author from '../models/author.js';
 import Book from '../models/book.js';
 import { ApiError } from "../utils/api-error.js";
+import { paginate } from "../utils/api-features.js";
 import { imageKit } from "../utils/image-upload.js";
 
 
@@ -11,7 +12,6 @@ export const getBooks = async (req, res, next) => {
   const { title, authorId, createdBefore, createdAfter, publishedBefore, publishedAfter, minPagesCount, maxPagesCount } = req.query;
   try {
     let query = Book.find();
-    let authors = await Author.find();
     const searchOptions = {};
 
     { // =========== add search queries ===========
@@ -32,16 +32,28 @@ export const getBooks = async (req, res, next) => {
       if (maxPagesCount)
         query = query.lte('pagesCount', maxPagesCount);
     }
-    const books = await query.find(searchOptions).limit(100);
+
+    const pagination = await paginate({ req, limit: 4, model: query, modelOptions: searchOptions });
+    const { findDocuments, pagesCount, currentPage, urlQuery } = pagination;
+
+    const books = await findDocuments();
+    const authors = await Author.find();
+
     res.render('books', {
       books,
       searchOptions: req.query,
       authors,
-      minPagesCount: Book().minPagesCount
+      minPagesCount: Book().minPagesCount,
+      pagesCount, currentPage, urlQuery
     });
-  } catch {
-    const errorMessage = "Can't connect to database to get books";
-    next(new ApiError(errorMessage, 502, 'books', { books: [], searchOptions: req.query, errorMessage }));
+  } catch (err) {
+
+    if (err.statusCode === 404) {
+      return next(err);
+    }
+
+    const errorMessage = "Can't connect to database to get books or authors";
+    next(new ApiError(errorMessage, 502, 'books', { books: [], authors: [], minPagesCount: Book().minPagesCount, searchOptions: req.query, errorMessage, currentPage: 1, pagesCount: 1, urlQuery: "" }));
   }
 };
 
@@ -109,14 +121,14 @@ export const createBook = async (req, res, next) => {
 // @access Public
 export const getBook = async (req, res, next) => {
   const { id } = req.params;
-  const {bookErrorMessage:errorMessage} = req.session
+  const { bookErrorMessage: errorMessage } = req.session;
   delete req.session.bookErrorMessage;
   try {
     const book = await Book.findById(id).populate('authorId');
     if (!book) {
       return next(new ApiError("Wrong book id", 404));
     }
-    res.render('books/show-book', { book, author: book.authorId ,errorMessage});
+    res.render('books/show-book', { book, author: book.authorId, errorMessage });
   } catch {
     const errorMessage = "Can't connect to database to get book details";
     next(new ApiError(errorMessage, 502, 'books/show-book', { errorMessage }));
@@ -188,33 +200,33 @@ export const updateBook = async (req, res, next) => {
 // @desc   Delete a book
 // @route  DELETE /books/:id
 // @access Public
-export const deleteBook = async(req, res,next) => {
-  const {id}=req.params;
+export const deleteBook = async (req, res, next) => {
+  const { id } = req.params;
   let book;
   let deleted = {};
   try {
     book = await Book.findByIdAndDelete(id);
-    if(!book){
+    if (!book) {
       const errorMessage = "Wrong book id for deleting";
-      return next(new ApiError(errorMessage, 502, 'errors/404',{errorMessage}))
+      return next(new ApiError(errorMessage, 502, 'errors/404', { errorMessage }));
     }
-    deleted.book=true
-    await imageKit.deleteFile(book.coverImageFileId)
+    deleted.book = true;
+    await imageKit.deleteFile(book.coverImageFileId);
     deleted.image = true;
     res.redirect('/books');
   } catch {
     let errorMessage = "Can't connect to database to delete book details";
-    
-    if(deleted.book && !deleted.image){
-      try{
-        book = await Book.create(book)
-        req.session.bookErrorMessage = errorMessage
+
+    if (deleted.book && !deleted.image) {
+      try {
+        book = await Book.create(book);
+        req.session.bookErrorMessage = errorMessage;
         return res.redirect(`/books/${book.id}`);
-      }catch{
+      } catch {
         errorMessage = "Can't connect to image server to delete cover image";
       }
     }
 
-    next(new ApiError(errorMessage, 502, 'books/show-book',{errorMessage}));
+    next(new ApiError(errorMessage, 502, 'books/show-book', { errorMessage }));
   }
 };
