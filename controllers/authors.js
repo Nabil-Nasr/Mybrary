@@ -70,22 +70,22 @@ export const createAuthor = async (req, res, next) => {
 // @route  Get /authors/:id
 // @access Public
 export const getAuthor = async (req, res, next) => {
-  const { id: authorId } = req.params;
+  const { id } = req.params;
   let errorMessage;
-  if (req.session[authorId]) {
-    ({ authorErrorMessage: errorMessage } = req.session[authorId]);
-    delete req.session[authorId];
+  if (req.session[id]) {
+    ({ authorErrorMessage: errorMessage } = req.session[id]);
+    delete req.session[id];
   }
   try {
     // throws error if the author id in wrong format
     // and this handled before in the validator
-    const author = await Author.findById(authorId);
+    const author = await Author.findById(id);
     if (!author) {
       // 404 statusCode calls the error page from the global error handler
       return next(new ApiError("Wrong author id", 404));
     }
 
-    const pagination = await paginate({ req, limit: 4, model: Book, modelOptions: { authorId } });
+    const pagination = await paginate({ req, limit: 4, model: Book, modelOptions: { authorId: id } });
     const { findDocuments, pagesCount, currentPage, urlQuery } = pagination;
     const books = await findDocuments();
 

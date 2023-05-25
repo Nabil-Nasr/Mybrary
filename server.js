@@ -12,10 +12,7 @@ import booksRouter from './routes/books.js';
 import indexRouter from './routes/index.js';
 import { ApiError } from "./utils/api-error.js";
 
-if (process.env.NUMBER_OF_PROXIES) {
-	// set number of proxies between user and server to limit the user by ip and not limiting all users
-	app.set("trust proxy", process.env.NUMBER_OF_PROXIES);
-}
+
 app.set('view engine', 'ejs');
 app.set('layout', 'layouts/layout');
 // two lines below will extract js ,link and style tags from the rendered ejs to layout.ejs 
@@ -53,8 +50,10 @@ app.use(rateLimit({
 	max: 100, // Limit each IP to 100 requests per `window` (here, per 30 minutes)
 	message: `Too many requests from this IP, please try again in ${windowMs / 60 / 1000} minutes`,
 	handler: async (req, res, next, options) =>
-		next(new ApiError("Too many requests", 429, "errors/429", { layout: false, rateLimitMessage: options.message }))
-
+		next(new ApiError("Too many requests", 429, "errors/429", { layout: false, rateLimitMessage: options.message })),
+	// returning the ip that will be blocked in too many requests
+	// true-client-ip is in render.com and x-forwarded-for exists in render.com and cyclic.sh but it's one ip in cyclic.sh
+	keyGenerator: req => req.header('true-client-ip') || req.header('x-forwarded-for')
 }));
 
 // Middleware to protect against HTTP Parameter Pollution attacks
