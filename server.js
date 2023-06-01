@@ -42,7 +42,6 @@ if (process.env.NODE_ENV === 'development') {
 	}
 }
 
-
 // ============== some security ===================
 const windowMs = 30 * 60 * 1000;
 app.use(rateLimit({
@@ -53,7 +52,7 @@ app.use(rateLimit({
 		next(new ApiError("Too many requests", 429, "errors/429", { layout: false, rateLimitMessage: options.message })),
 	// returning the ip that will be blocked in too many requests
 	// true-client-ip is in render.com and x-forwarded-for exists in render.com and cyclic.sh but it's one ip in cyclic.sh
-	keyGenerator: req => req.header('true-client-ip') || req.header('x-forwarded-for')
+	keyGenerator: req => req.header('true-client-ip') || req.header('x-forwarded-for')?.split(', ').slice(-1)
 }));
 
 // Middleware to protect against HTTP Parameter Pollution attacks
