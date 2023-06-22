@@ -27,7 +27,7 @@ app.use(methodOverride("_method"));
 app.use(express.static('public'));
 // for receiving post requests from front-end
 app.use(express.urlencoded({ limit: '20kb', extended: false }));
-app.use(cookieSession({ secret: "secret-for-redirecting-messages" }));
+app.use(cookieSession({ secret: process.env.COOKIE_SECRET ,httpOnly:true}));
 
 
 const server = await dbConnection();
@@ -46,7 +46,7 @@ if (process.env.NODE_ENV === 'development') {
 const windowMs = 30 * 60 * 1000;
 app.use(rateLimit({
 	windowMs,
-	max: 100, // Limit each IP to 100 requests per `window` (here, per 30 minutes)
+	max: 200, // Limit each IP to 200 requests per `window` (here, per 30 minutes)
 	message: `Too many requests from this IP, please try again in ${windowMs / 60 / 1000} minutes`,
 	handler: async (req, res, next, options) =>
 		next(new ApiError("Too many requests", 429, "errors/429", { layout: false, rateLimitMessage: options.message })),
@@ -65,7 +65,7 @@ app.disable("x-powered-by");
 app.use('/', indexRouter);
 app.use('/authors', authorsRouter);
 app.use('/books', booksRouter);
-app.use('/admins', adminsRouter);
+app.use(process.env.ADMIN_ROUTE, adminsRouter);
 app.all('*', (req, res, next) => {
 	next(new ApiError("This Page Not Found", 404));
 });

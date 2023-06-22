@@ -1,9 +1,14 @@
 import express from 'express'
-import Admin from '../models/admin.js'
+import { loginValidator } from "../utils/validators/admins.js"
+import { getLoginForm, login, logout } from "../controllers/admins.js";
 
 const router = express.Router();
 
 
+router.route('/login')
+  .get(getLoginForm)
+  .post(loginValidator,login)
 
+router.post('/logout',logout)
 
 export default router;

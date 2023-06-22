@@ -1,20 +1,23 @@
 import mongoose from "mongoose";
+import uniqueValidator from 'mongoose-unique-validator';
 
 const adminSchema = new mongoose.Schema({
   email:{
     type:String,
-    unique:true,
+    unique: true,
+    uniqueCaseInsensitive: true,
     required:true,
     trim:true,
     lowercase:true,
-    match: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
   },
+  // hashed password
   password:{
     type:String,
     required:true,
-    minlength:8
-  }
+  },
 })
+
+adminSchema.plugin(uniqueValidator,{message:"Admin {PATH} ({VALUE}) has been used before"});
 
 const Admin = mongoose.model("Admin", adminSchema);
 

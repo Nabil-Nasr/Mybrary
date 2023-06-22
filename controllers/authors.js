@@ -14,7 +14,7 @@ export const getAuthors = async (req, res, next) => {
       searchOptions.name = new RegExp(name, 'i');
     }
 
-    const pagination = await paginate({ req, limit: 2, model: Author, modelOptions: searchOptions });
+    const pagination = await paginate({ req, limit: process.env.PAGINATION_AUTHORS_LIMIT, model: Author, modelOptions: searchOptions });
     const { findDocuments, pagesCount, currentPage, urlQuery } = pagination;
     const authors = await findDocuments();
 
@@ -36,7 +36,7 @@ export const getAuthors = async (req, res, next) => {
 
 // @desc   Get new author page
 // @route  Get /authors/new-author
-// @access Public
+// @access Private
 export const getNewAuthorForm = async (req, res) => {
   res.render('authors/new-author', { author: new Author() });
 };
@@ -44,7 +44,7 @@ export const getNewAuthorForm = async (req, res) => {
 
 // @desc   Create a new author
 // @route  POST /authors
-// @access Public
+// @access Private
 export const createAuthor = async (req, res, next) => {
   const { name } = req.body;
   try {
@@ -85,7 +85,7 @@ export const getAuthor = async (req, res, next) => {
       return next(new ApiError("Wrong author id", 404));
     }
 
-    const pagination = await paginate({ req, limit: 4, model: Book, modelOptions: { authorId: id } });
+    const pagination = await paginate({ req, limit: process.env.PAGINATION_BOOKS_LIMIT, model: Book, modelOptions: { authorId: id } });
     const { findDocuments, pagesCount, currentPage, urlQuery } = pagination;
     const books = await findDocuments();
 
@@ -106,7 +106,7 @@ export const getAuthor = async (req, res, next) => {
 
 // @desc   Get author edit page
 // @route  Get /authors/:id/edit-author
-// @access Public
+// @access Private
 export const getEditAuthorForm = async (req, res, next) => {
   const { id } = req.params;
   try {
@@ -125,7 +125,7 @@ export const getEditAuthorForm = async (req, res, next) => {
 
 // @desc   Update author details
 // @route  PUT /authors/:id
-// @access Public
+// @access Private
 export const updateAuthor = async (req, res, next) => {
   const { id } = req.params;
   try {
@@ -154,7 +154,7 @@ export const updateAuthor = async (req, res, next) => {
 
 // @desc   Delete an author
 // @route  DELETE /authors/:id
-// @access Public
+// @access Private
 export const deleteAuthor = async (req, res, next) => {
   const { id } = req.params;
   try {

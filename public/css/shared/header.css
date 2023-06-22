@@ -4,13 +4,15 @@
   --font-weight-nav-link:300;
 }
 
-header a {
+header a,
+header .logout-btn {
   text-decoration: none;
   color: var(--color-main-light);
   transition: color var(--transition-main-duration);
 }
 
-header a:hover {
+header a:hover,
+header .logout-btn:hover {
   color:white;
 }
 
@@ -34,11 +36,18 @@ header ul {
   margin: 0;
 }
 
-header li {
+header li,
+header .logout-btn {
   list-style: none;
   padding: var(--gap-main);
 }
 
 header li a {
   font-weight: var(--font-weight-nav-link);
+}
+
+header .logout-btn {
+  font-size: inherit;
+  border: none;
+  background: transparent;
 }

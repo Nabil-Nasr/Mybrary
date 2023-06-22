@@ -6,6 +6,12 @@
   --color-background-select-option: hsl(var(--color-base-hue), 100%, 10%);
 }
 
+.auth-wrapper {
+  width: max(500px,50vw);
+  max-width: 100%;
+  margin-inline: auto;
+} 
+
 .form-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -13,10 +19,18 @@
   margin-bottom: var(--gap-main);
 }
 
+.auth-wrapper .form-row{
+  grid-template-columns: 1fr;
+}
+
 .form-row > div:not(.btn-row) {
   display: grid;
   margin-top: var(--gap-main);
   grid-template-rows: auto 1fr;
+}
+
+.auth-wrapper .btn-row {
+  margin-top: var(--gap-main);
 }
 
 /* :first-of-type to not select file input wrapper in create book page */

@@ -1,25 +1,26 @@
 import express from 'express';
 import { getBooks, getNewBookForm, createBook, getBook, getEditBookForm, updateBook, deleteBook } from '../controllers/books.js';
 import { getBookValidator, createBookValidator, updateBookValidator, deleteBookValidator, getEditBookFormValidator } from "../utils/validators/books.js";
+import { checkAdmin, protect } from "../middlewares/auth.js";
 
 const router = express.Router();
 
 //  /books
 router.route('/')
-  .get(getBooks)
-  .post(createBookValidator, createBook);
+  .get(checkAdmin,getBooks)
+  .post(protect,createBookValidator, createBook);
 
 //  /books/new-book
-router.get('/new-book', getNewBookForm);
+router.get('/new-book',protect, getNewBookForm);
 
 //  /books/:id
 router.route('/:id')
-  .get(getBookValidator, getBook)
-  .put(updateBookValidator, updateBook)
-  .delete(deleteBookValidator, deleteBook);
+  .get(checkAdmin,getBookValidator, getBook)
+  .put(protect,updateBookValidator, updateBook)
+  .delete(protect,deleteBookValidator, deleteBook);
 
 //  /books/:id/edit-book
-router.get('/:id/edit-book', getEditBookFormValidator, getEditBookForm);
+router.get('/:id/edit-book',protect, getEditBookFormValidator, getEditBookForm);
 
 
 

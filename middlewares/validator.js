@@ -46,8 +46,10 @@ export const validatorMiddleware = (modelName) =>
             errorMessages.unshift("One Author at Least Required Before Creating a Book");
           }
           next(new ApiError("Invalid book details", 502, `books/${viewMethod}-book`, { book: { ...req.body, id: req.params?.id }, authors, errorMessages }));
-        } else {
+        } else if (modelName.toLowerCase() === "author") {
           next(new ApiError("Invalid author name", 502, `authors/${viewMethod}-author`, { author: { ...req.body, id: req.params?.id }, errorMessages }));
+        } else {
+          next(new ApiError("Invalid login details", 401, `admins/login`,{errorMessages}));
         }
 
       } else if ((req.method === "PUT" || req.method === "DELETE") && errorsMapped.id) {

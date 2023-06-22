@@ -1,0 +1,22 @@
+
+<h2>Admin Login</h2>
+<form action="<%= process.env.ADMIN_ROUTE %>/login" method="POST">
+  <div class="auth-wrapper">
+    <div class="form-row">
+      <div>
+        <label for="email">Email</label>
+        <input type="email" required name="email" id="email">
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input type="password" required name="password" id="password" minlength="8">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="btn-row">
+        <a href="/" class="btn btn-danger">Cancel</a>
+        <button type="submit" class="btn btn-primary">Login</button>
+      </div>
+    </div>
+  </div>
+</form>

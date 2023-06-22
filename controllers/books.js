@@ -33,7 +33,7 @@ export const getBooks = async (req, res, next) => {
         query = query.lte('pagesCount', maxPagesCount);
     }
 
-    const pagination = await paginate({ req, limit: 4, model: query, modelOptions: searchOptions });
+    const pagination = await paginate({ req, limit: process.env.PAGINATION_BOOKS_LIMIT, model: query, modelOptions: searchOptions });
     const { findDocuments, pagesCount, currentPage, urlQuery } = pagination;
 
     const books = await findDocuments();
@@ -59,7 +59,7 @@ export const getBooks = async (req, res, next) => {
 
 // @desc   Get new book form page
 // @route  GET /books/new-book
-// @access Public
+// @access Private
 export const getNewBookForm = async (req, res, next) => {
   try {
     const authors = await Author.find();
@@ -80,7 +80,7 @@ export const getNewBookForm = async (req, res, next) => {
 
 // @desc   Create a new book
 // @route  POST /books
-// @access Public
+// @access Private
 export const createBook = async (req, res, next) => {
   try {
     const book = await Book.create(req.body);
@@ -137,7 +137,7 @@ export const getBook = async (req, res, next) => {
 
 // @desc   Get edit book details
 // @route  GET /books/:id/edit-book
-// @access Public
+// @access Private
 export const getEditBookForm = async (req, res, next) => {
   const { id } = req.params;
   try {
@@ -155,7 +155,7 @@ export const getEditBookForm = async (req, res, next) => {
 
 // @desc   Update book details
 // @route  PUT /books/:id
-// @access Public
+// @access Private
 export const updateBook = async (req, res, next) => {
   const { id } = req.params;
   try {
@@ -199,7 +199,7 @@ export const updateBook = async (req, res, next) => {
 
 // @desc   Delete a book
 // @route  DELETE /books/:id
-// @access Public
+// @access Private
 export const deleteBook = async (req, res, next) => {
   const { id } = req.params;
   let book;
