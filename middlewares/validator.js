@@ -1,5 +1,6 @@
 import { validationResult } from "express-validator";
 import Author from "../models/author.js";
+import Book from "../models/book.js";
 import { ApiError } from "../utils/api-error.js";
 import { uploadImageToImagKit ,removeUploadedFiles} from "../utils/image-upload.js";
 
@@ -23,7 +24,15 @@ export const validatorMiddleware = (modelName) =>
       const errorsMapped = errors.mapped();
       if (req.method === "GET") {
         if (errorsMapped.id) {
-          next(new ApiError("not found", 404));
+          return next(new ApiError("not found", 404));
+        }else {
+          let errorMessages = [];
+          for (let error of errors.array()) {
+            errorMessages.push(error.msg);
+          }
+          req.session.errorMessages=errorMessages
+          req.session.reqQuery=req.query
+          return res.status(502).redirect(`${modelName}s`)
         }
       } else if ((req.method === "POST" || req.method === "PUT") && !errorsMapped.id) {
         let errorMessages = [];

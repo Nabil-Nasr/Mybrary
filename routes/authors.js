@@ -1,13 +1,13 @@
 import express from 'express'
 import {getAuthors,getNewAuthorForm,createAuthor,getAuthor,getEditAuthorForm,updateAuthor,deleteAuthor} from '../controllers/authors.js'
-import { getAuthorValidator,createAuthorValidator,updateAuthorValidator,deleteAuthorValidator ,getEditAuthorFormValidator} from "../utils/validators/authors.js";
+import { getAuthorValidator,getAuthorsValidator,createAuthorValidator,updateAuthorValidator,deleteAuthorValidator ,getEditAuthorFormValidator} from "../utils/validators/authors.js";
 import { protect,checkAdmin } from "../middlewares/auth.js";
 
 const router = express.Router();
 
 //  /authors
 router.route('/')
-.get(checkAdmin,getAuthors)
+.get(checkAdmin,getAuthorsValidator,getAuthors)
 .post(protect,createAuthorValidator,createAuthor);
 
 //  /authors/new-author

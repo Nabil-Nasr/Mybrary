@@ -8,6 +8,9 @@ import { paginate } from "../utils/api-features.js";
 // @access Public
 export const getAuthors = async (req, res, next) => {
   const { name } = req.query;
+  const { errorMessages, reqQuery } = req.session;
+  delete req.session.errorMessages;
+  delete req.session.reqQuery;
   try {
     const searchOptions = {};
     if (name) {
@@ -20,8 +23,9 @@ export const getAuthors = async (req, res, next) => {
 
     res.render('authors', {
       authors,
-      searchNameQuery: name,
-      pagesCount, currentPage, urlQuery
+      searchNameQuery: reqQuery ? reqQuery.name : name,
+      pagesCount, currentPage, urlQuery,
+      errorMessages
     });
   } catch (err) {
 

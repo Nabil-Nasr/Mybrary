@@ -1,13 +1,13 @@
 import express from 'express';
 import { getBooks, getNewBookForm, createBook, getBook, getEditBookForm, updateBook, deleteBook } from '../controllers/books.js';
-import { getBookValidator, createBookValidator, updateBookValidator, deleteBookValidator, getEditBookFormValidator } from "../utils/validators/books.js";
+import { getBookValidator,getBooksValidator, createBookValidator, updateBookValidator, deleteBookValidator, getEditBookFormValidator } from "../utils/validators/books.js";
 import { checkAdmin, protect } from "../middlewares/auth.js";
 
 const router = express.Router();
 
 //  /books
 router.route('/')
-  .get(checkAdmin,getBooks)
+  .get(checkAdmin,getBooksValidator,getBooks)
   .post(protect,createBookValidator, createBook);
 
 //  /books/new-book

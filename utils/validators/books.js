@@ -1,6 +1,6 @@
 import { validatorMiddleware } from "../../middlewares/validator.js";
 import { uploadImageToExpress } from "../image-upload.js";
-import { body, param } from "express-validator";
+import { body, param,query } from "express-validator";
 import Book from "../../models/book.js";
 import { validateCoverImage, checkAuthorExistence } from "./books-custom.js";
 
@@ -10,6 +10,43 @@ export const getBookValidator = [
   param('id')
     .isMongoId().withMessage("Invalid book id"), 
 
+  validatorMiddleware('book')
+];
+
+export const getBooksValidator = [
+  query('title')
+    .if(value=>value??null)
+    .optional()
+    .trim()
+    .isLength({ max: bookTitle.maxlength[0] }).withMessage(bookTitle.maxlength[1]),
+  query('authorId')
+    .if(value=>value??null)
+    .optional()
+    .isMongoId().withMessage("Invalid author id"),
+  query('createdAfter')
+    .if(value=>value??null)
+    .optional()
+    .isDate().withMessage("Wrong created after date format"),
+  query('createdBefore')
+    .if(value=>value??null)
+    .optional()
+    .isDate().withMessage("Wrong created before date format"),
+  query('publishedAfter')
+    .if(value=>value??null)
+    .optional()
+    .isDate().withMessage("Wrong published after date format"),
+  query('publishedBefore')
+    .if(value=>value??null)
+    .optional()
+    .isDate().withMessage("Wrong published before date format"),
+  query('minPagesCount')
+    .if(value=>value??null)
+    .optional()
+    .isInt().withMessage(bookPagesCount.type[1].replace("a number", "an integer").replace("pages","minimum pages")),
+  query('maxPagesCount')
+    .if(value=>value??null)
+    .optional()
+    .isInt().withMessage(bookPagesCount.type[1].replace("a number", "an integer").replace("pages","maximum pages")),
   validatorMiddleware('book')
 ];
 

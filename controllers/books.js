@@ -10,6 +10,9 @@ import { imageKit } from "../utils/image-upload.js";
 // @access Public
 export const getBooks = async (req, res, next) => {
   const { title, authorId, createdBefore, createdAfter, publishedBefore, publishedAfter, minPagesCount, maxPagesCount } = req.query;
+  const { errorMessages, reqQuery } = req.session;
+  delete req.session.errorMessages;
+  delete req.session.reqQuery;
   try {
     let query = Book.find();
     const searchOptions = {};
@@ -41,10 +44,11 @@ export const getBooks = async (req, res, next) => {
 
     res.render('books', {
       books,
-      searchOptions: req.query,
+      searchOptions: reqQuery ? reqQuery : req.query,
       authors,
       minPagesCount: Book().minPagesCount,
-      pagesCount, currentPage, urlQuery
+      pagesCount, currentPage, urlQuery,
+      errorMessages
     });
   } catch (err) {
 
