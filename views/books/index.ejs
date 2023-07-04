@@ -24,19 +24,19 @@
           </select>
       </div>
     </div>
-    <div class="form-row" >
-      <div>
-        <label for="created-after">Created After</label>
-        <input type="date"  name="createdAfter" id="created-after"
-              value="<%= searchOptions.createdAfter%>">
-      </div>
-      <div>
-          <label for="created-before">Created Before</label>
-          <input type="date"  name="createdBefore" id="created-before"
-                value="<%= searchOptions.createdBefore%>">
-      </div>
-    </div>
     <div class="advanced-search">
+      <div class="form-row" >
+        <div>
+          <label for="created-after">Created After</label>
+          <input type="date"  name="createdAfter" id="created-after"
+                value="<%= searchOptions.createdAfter%>">
+        </div>
+        <div>
+            <label for="created-before">Created Before</label>
+            <input type="date"  name="createdBefore" id="created-before"
+                  value="<%= searchOptions.createdBefore%>">
+        </div>
+      </div>
       <div class="form-row">
         <div>
           <label for="published-after">Published After</label>

@@ -48,7 +48,7 @@ function formatTimeAgo(date) {
   </div>
   <div class="book-details">
     <div>Author : </div>
-    <div><%= author.name %></div>
+    <div class="author-name"><%= author.name %></div>
     <div>Uploaded : </div>
     <div><%= formatTimeAgo(book.createdAt)%></div>
     <div>Updated : </div>
@@ -57,12 +57,10 @@ function formatTimeAgo(date) {
     <div><%= new Intl.DateTimeFormat("en-UK",{weekday:"short",day:"numeric",year:"numeric",month:"short"}).format(book.publishDate)%></div>
     <div>Pages Count : </div>
     <div><%= book.pagesCount%></div>
-    <% if (book.description) { %>
-      <div>
-        <div>Description : </div>
-        <div><%- book.description%></div>
-      </div>
-    <% } %>
+    <div>
+      <div>Description : </div>
+      <div class="description-content"><%- book.description%></div>
+    </div>
   </div>
 </div>
 <% } %>
