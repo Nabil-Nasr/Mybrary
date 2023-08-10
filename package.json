@@ -10,7 +10,7 @@
     "watch": "nodemon -r dotenv/config --ext js,ejs --ignore public"
   },
   "engines": {
-    "node": "18.16.0"
+    "node": "16.20.2"
   },
   "repository": {
     "type": "git",
